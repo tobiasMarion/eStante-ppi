@@ -7,6 +7,12 @@
 
 body {
     min-height: 100vh;
+    background: #F8FAFC;
+}
+
+label, input, select, option {
+    cursor: pointer;
+    outline: none;
 }
 
 .input-container-effect::after {
