@@ -5,7 +5,7 @@
     transition: ease-out 0.3s;
 }
 
-body {
+body, body > div {
     min-height: 100vh;
     background: #F8FAFC;
 }
@@ -23,7 +23,7 @@ label, input, select, option {
     bottom: -2px;
     left: 10px;
     width: 0;
-    transition: ease-out 0.3s;
+    transition: ease-out 0.15s;
 }
 
 .input-container-effect.active::after {
