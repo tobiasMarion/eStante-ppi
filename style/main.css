@@ -5,6 +5,10 @@
     transition: ease-out 0.3s;
 }
 
+:root {
+    --swiper-theme-color: #059669 !important;
+}
+
 body, body > div {
     min-height: 100vh;
     background: #F8FAFC;
