@@ -39,3 +39,8 @@ label, input, select, option {
     left: 10px;
     width: calc(100% - 20px);
 }
+
+.control-panel > *:hover > header span {
+    opacity: 1;
+    transition: .1s ease-out;
+}

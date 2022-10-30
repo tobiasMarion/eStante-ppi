@@ -2,44 +2,42 @@
 <html lang="pt-br">
 
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>eStante | Qual obra você vai retirar da eStante hoje?</title>
 
-    <link rel="shortcut icon" href="./assets/icon.svg" type="image/x-icon">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="shortcut icon" href="./assets/icon.svg" type="image/x-icon" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
         href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
-        rel="stylesheet">
+        rel="stylesheet" />
 
-    <link rel="stylesheet" href="style/main.css">
+    <link rel="stylesheet" href="style/main.css" />
     <script src="https://cdn.tailwindcss.com"></script>
-
 </head>
 
 <body>
     <div class="bg-slate-50 flex flex-col min-h">
         <header class="p-3 bg-white border border-b-1 border-slate-100 drop-shadow-sm">
-            <div class="flex w-full justify-between max-w-7xl mx-auto items-center gap-8  md:gap-16 px-2">
+            <div class="flex w-full justify-between max-w-7xl mx-auto items-center gap-8 md:gap-16 px-2">
                 <a href="/">
                     <picture>
-                        <source srcset="./assets/eStante.svg" media="(min-width: 768px)">
+                        <source srcset="./assets/eStante.svg" media="(min-width: 768px)" />
 
-                        <img src="./assets/icon.svg" alt="eStante" class="w-9 md:w-fit">
+                        <img src="./assets/icon.svg" alt="eStante" class="w-9 md:w-fit" />
                     </picture>
                 </a>
 
-
                 <div class="flex flex-col gap-2 flex-grow max-w-2xl">
                     <div
-                        class="flex gap-2 border rounded-lg border-1 border-slate-300 py-1 px-2 input-container-effect relative ">
+                        class="flex gap-2 border rounded-lg border-1 border-slate-300 py-1 px-2 input-container-effect relative">
                         <label for="search" class="block"><img src="./assets/icons/search.svg" alt="Usuário"
-                                class="h-6 my-auto "></label>
+                                class="h-6 my-auto" /></label>
                         <input type="text" name="search" id="search"
                             class="outline-0 bg-transparent text-slate-500 w-full border-x-2 border-slate-200 mr-1 pr-1 px-1 text-sm md:text-base"
-                            placeholder="Pesquisar...">
+                            placeholder="Pesquisar..." />
                         <select name="select"
                             class="text-sm outline-0 bg-transparent text-slate-500 text-sm md:text-base">
                             <option value="title" selected>Título</option>
@@ -55,36 +53,119 @@
                         <span class="block text-xs font-light text-slate-500 leading-none">Aluno</span>
                     </div>
                     <img src="./assets/profileFiller.png" alt="Fulano de Tal"
-                        class="w-12 h-auto rounded-full border border-2 border-emerald-500">
+                        class="w-12 h-auto rounded-full border border-2 border-emerald-500" />
                 </div>
             </div>
         </header>
 
         <main class="w-full max-w-7xl mx-auto flex-grow my-8 md:my-16 px-2 flex flex-col gap-2">
-            <h1 class="font-semibold text-slate-900 text-2xl md:text-4xl mb-2">Painel de Controle</h1>
-            <p class="text-slate-500 text-sm md:text-base mb-4">Gerencie a equipe e o acervo da sua biblioteca com
-                poucos cliques, tudo centralizado e acessível e um único lugar.</p>
+            <h1 class="font-semibold text-slate-900 text-2xl md:text-4xl mb-2">
+                Painel de Controle
+            </h1>
+            <p class="text-slate-500 text-sm md:text-base mb-8">
+                Gerencie a equipe e o acervo da sua biblioteca com poucos cliques,
+                tudo centralizado e acessível e um único lugar.
+            </p>
+
+            <div class="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 control-panel">
+                <a href="/" class="border rounded-lg drop-shadow-sm p-6 bg-white flex flex-col">
+                    <header class="flex justify-between items-center mb-4">
+                        <img src="./assets/icons/book.svg" alt="Obras" class="w-6" />
+                        <span class="opacity-0 flex gap-1 items-center leading-none text-xs text-emerald-600">Adicionar
+                            <img src="./assets/icons/add.svg" alt="Adicionar" class="w-4" /></span>
+                    </header>
+                    <strong class="text-2xl text-slate-900">15.000</strong>
+                    <p class="text-slate-600">Obras</p>
+                </a>
+                <a href="/" class="border rounded-lg drop-shadow-sm p-6 bg-white flex flex-col">
+                    <header class="flex justify-between items-start mb-4">
+                        <img src="./assets/icons/users.svg" alt="Leitores" class="w-6" />
+                        <span class="opacity-0 flex gap-1 items-center leading-none text-xs text-emerald-600">Adicionar
+                            <img src="./assets/icons/add.svg" alt="Adicionar" class="w-4" /></span>
+                    </header>
+                    <strong class="text-2xl text-slate-900">500</strong>
+                    <p class="text-slate-600">Leitores</p>
+                </a>
+                <a href="/" class="border rounded-lg drop-shadow-sm p-6 bg-white flex flex-col">
+                    <header class="flex justify-between items-start mb-4">
+                        <img src="./assets/icons/quotes.svg" alt="Citações" class="w-6" />
+                        <span class="opacity-0 flex gap-1 items-center leading-none text-xs text-emerald-600">Adicionar
+                            <img src="./assets/icons/add.svg" alt="Adicionar" class="w-4" /></span>
+                    </header>
+                    <strong class="text-2xl text-slate-900">10</strong>
+                    <p class="text-slate-600">Citações</p>
+                </a>
+                <div class="border rounded-lg drop-shadow-sm p-6 bg-white flex flex-col">
+                    <img src="./assets/icons/gray-star.svg" alt="Avaliações" class="w-6 mb-4" />
+                    <strong class="text-2xl text-slate-900">7.000</strong>
+                    <p class="text-slate-600">Avaliações</p>
+                </div>
+                <div class="border rounded-lg drop-shadow-sm p-6 bg-white flex flex-col">
+                    <img src="./assets/icons/approved-comments.svg" alt="Comentários Aprovados" class="w-6 mb-4" />
+                    <strong class="text-2xl text-slate-900">2.000</strong>
+                    <p class="text-slate-600">Comentários Aprovados</p>
+                </div>
+                <a href="/" class="border rounded-lg drop-shadow-sm p-6 bg-white flex flex-col">
+                    <header class="flex justify-between items-start mb-4">
+                        <img src="./assets/icons/pending-comments.svg" alt="Comentários Pendentes" class="w-6" />
+                        <span class="opacity-0 flex gap-1 items-center leading-none text-xs text-emerald-600">Adicionar
+                            <img src="./assets/icons/add.svg" alt="Adicionar" class="w-4" /></span>
+                    </header>
+                    <strong class="text-2xl text-slate-900">30</strong>
+                    <p class="text-slate-600">Comentários Pendentes</p>
+                </a>
+                <a href="/" class="border rounded-lg drop-shadow-sm p-6 bg-white flex flex-col">
+                    <header class="flex justify-between items-start mb-4">
+                        <img src="./assets/icons/moderators.svg" alt="Moderadores" class="w-6" />
+                        <span class="opacity-0 flex gap-1 items-center leading-none text-xs text-emerald-600">Adicionar
+                            <img src="./assets/icons/add.svg" alt="Adicionar" class="w-4" /></span>
+                    </header>
+                    <strong class="text-2xl text-slate-900">30</strong>
+                    <p class="text-slate-600">Moderadores</p>
+                </a>
+                <a href="/" class="border rounded-lg drop-shadow-sm p-6 bg-white flex flex-col">
+                    <header class="flex justify-between items-start mb-4">
+                        <img src="./assets/icons/employees.svg" alt="Funcionários" class="w-6" />
+                        <span class="opacity-0 flex gap-1 items-center leading-none text-xs text-emerald-600">Adicionar
+                            <img src="./assets/icons/add.svg" alt="Adicionar" class="w-4" /></span>
+                    </header>
+                    <strong class="text-2xl text-slate-900">2</strong>
+                    <p class="text-slate-600">Funcionários</p>
+                </a>
+                <a href="/" class="border rounded-lg drop-shadow-sm p-6 bg-white flex flex-col">
+                    <header class="flex justify-between items-start mb-4">
+                        <img src="./assets/icons/employees.svg" alt="Biblitecários" class="w-6" />
+                        <span class="opacity-0 flex gap-1 items-center leading-none text-xs text-emerald-600">Adicionar
+                            <img src="./assets/icons/add.svg" alt="Adicionar" class="w-4" /></span>
+                    </header>
+                    <strong class="text-2xl text-slate-900">1</strong>
+                    <p class="text-slate-600">Biblitecários</p>
+                </a>
+            </div>
         </main>
 
         <footer class="bg-emerald-600">
-            <div class="w-full max-w-7xl mx-auto py-8 px-1 flex items-center justify-between">
+            <div class="w-full max-w-7xl mx-auto py-8 px-2 flex items-center justify-between">
                 <div>
-                    <img src="./assets/eStante-white.svg" alt="eStante" class="mb-4 md:mb-6">
-                    <p class="text-xs text-slate-200 max-w-lg font-light">O eStante foi um projeto desenvolvido para a
-                        Prática Profissional Integrada (PPI) da turma do 3º
-                        ano do Curso Técnico em Informática Integrado ao Ensino Médio, no ano de 2022.</p>
+                    <img src="./assets/eStante-white.svg" alt="eStante" class="mb-4 md:mb-6" />
+                    <p class="text-xs text-slate-200 max-w-lg font-light">
+                        O eStante foi um projeto desenvolvido para a Prática Profissional
+                        Integrada (PPI) da turma do 3º ano do Curso Técnico em Informática
+                        Integrado ao Ensino Médio, no ano de 2022.
+                    </p>
                 </div>
                 <a href="#" class="hidden md:block p-2 bg-slate-50 rounded-md"><img src="./assets/icons/arrow-up.svg"
-                        alt="De volta ao topo"></a>
+                        alt="De volta ao topo" /></a>
             </div>
             <div class="flex justify-center items-center bg-slate-50 py-1">
-                <p class="text-xs text-slate-600">Made with <img src="./assets/icons/heart.svg" alt="Love"
-                        class="inline w-3"> by Amanda, Josué, Tobias and Wagner - 34/22
+                <p class="text-xs text-slate-600">
+                    Made with
+                    <img src="./assets/icons/heart.svg" alt="Love" class="inline w-3" />
+                    by Amanda, Josué, Tobias and Wagner - 34/22
                 </p>
             </div>
         </footer>
     </div>
-
 
     <script src="./scripts/inputEffect.js"></script>
 </body>
