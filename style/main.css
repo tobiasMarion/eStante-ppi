@@ -3,6 +3,7 @@
 * {
     font-family: 'Poppins', sans-serif;
     transition: ease-out 0.3s;
+    scroll-behavior: smooth;
 }
 
 :root {
