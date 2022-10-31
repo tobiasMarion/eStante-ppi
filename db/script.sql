@@ -1,53 +1,76 @@
 CREATE DATABASE IF NOT EXISTS eStante;
 
-USE estacionamento;
+USE eStante;
 
-CREATE TABLE IF NOT EXISTS usuario (
-    id int NOT NULL AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS user (
+    userID INT NOT NULL AUTO_INCREMENT,
     name VARCHAR(250),
     registration VARCHAR(250),
     cpf varchar(11),
     email VARCHAR(250),
-    curso VARCHAR(250),
+    password VARCHAR(256),
+    course VARCHAR(250),
     isStudent BOOLEAN,
     library VARCHAR(250),
     isAway BOOLEAN,
-    PRIMARY KEY(id)
+
+    PRIMARY KEY(userID)
 );
 
 CREATE TABLE IF NOT EXISTS collection (
-    id int NOT NULL AUTO_INCREMENT,
+    collectionID INT NOT NULL AUTO_INCREMENT,
     type VARCHAR(250),
     cdu VARCHAR(250),
-    PRIMARY KEY(id)
+
+    PRIMARY KEY(collectionID)
 );
 
 CREATE TABLE IF NOT EXISTS item (
-    id int NOT NULL AUTO_INCREMENT,
+    itemID INT NOT NULL AUTO_INCREMENT,
     isbn varchar(100),
     title VARCHAR(250),
     subtitle VARCHAR(250),
-    edition int,
+    edition INT,
     publisher VARCHAR(250),
-    year int,
+    year INT,
     section VARCHAR(250),
     synthesis VARCHAR(1500),
     place VARCHAR(250),
-    inventory int,
+    inventory INT,
     library VARCHAR(250),
     physicalDescription VARCHAR(100),
     classification VARCHAR(250),
     isDigital BOOLEAN,
     link VARCHAR(500),
-    number VARCHAR(100)
+    number VARCHAR(100) cover VARCHAR(250),
+    
+    collectionID INT NOT NULL,
+    -- AUTHORS
+    -- TRANSLATORS
+    -- TAGS
+    
+    PRIMARY KEY(itemID),
+    FOREIGN KEY (collectionID) REFERENCES Persons(collectionID)
+);
 
-    --TAGS
-    collection int NOT NULL,
-    authors VARCHAR(300),
-    translators VARCHAR(160),
-    -- COVER
+CREATE TABLE IF NOT EXISTS comment (
+    commentID INT NOT NULL AUTO_INCREMENT,
+    userID INT NOT NULL,
+    itemID INT NOT NULL,
+    content VARCHAR(2000),
 
+    PRIMARY KEY(commentID),
+    FOREIGN KEY (userID) REFERENCES Persons(userID),    
+    FOREIGN KEY (itemID) REFERENCES Persons(itemID)
+);
 
-    PRIMARY KEY(id)
-)
+CREATE TABLE IF NOT EXISTS evaluation (
+    evaluationID INT NOT NULL AUTO_INCREMENT,
+    userID INT NOT NULL,
+    itemID INT NOT NULL,
+    value INT,
 
+    PRIMARY KEY(evaluationID),
+    FOREIGN KEY (userID) REFERENCES Persons(userID),
+    FOREIGN KEY (itemID) REFERENCES Persons(itemID)
+);
