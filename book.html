@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>eStante | Qual obra você vai retirar da eStante hoje?</title>
 
-    <link rel="shortcut icon" href="./assets/icon.svg" type="image/x-icon" />
+    <link rel="shortcut icon" href="./static/assets/icon.svg" type="image/x-icon" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -24,16 +24,16 @@
             <div class="flex w-full justify-between max-w-7xl mx-auto items-center gap-8 md:gap-16 px-2">
                 <a href="/">
                     <picture>
-                        <source srcset="./assets/eStante.svg" media="(min-width: 768px)" />
+                        <source srcset="./static/assets/eStante.svg" media="(min-width: 768px)" />
 
-                        <img src="./assets/icon.svg" alt="eStante" class="w-9 md:w-fit" />
+                        <img src="./static/assets/icon.svg" alt="eStante" class="w-9 md:w-fit" />
                     </picture>
                 </a>
 
                 <div class="flex flex-col gap-2 flex-grow max-w-2xl">
                     <div
                         class="flex gap-2 border rounded-lg border-1 border-slate-300 py-1 px-2 input-container-effect relative">
-                        <label for="search" class="block"><img src="./assets/icons/search.svg" alt="Usuário"
+                        <label for="search" class="block"><img src="./static/assets/icons/search.svg" alt="Usuário"
                                 class="h-6 my-auto" /></label>
                         <input type="text" name="search" id="search"
                             class="outline-0 bg-transparent text-slate-500 w-full border-x-2 border-slate-200 mr-1 pr-1 px-1 text-sm md:text-base"
@@ -52,33 +52,112 @@
                         <span class="text-slate-700 text-sm md:text-base block leading-none">Fulano de tal</span>
                         <span class="block text-xs font-light text-slate-500 leading-none">Aluno</span>
                     </div>
-                    <img src="./assets/profileFiller.png" alt="Fulano de Tal"
+                    <img src="./static/assets/profileFiller.png" alt="Fulano de Tal"
                         class="w-12 h-auto rounded-full border border-2 border-emerald-500" />
                 </div>
             </div>
         </header>
 
         <main class="w-full max-w-7xl mx-auto flex-grow my-8 md:my-16 px-2 flex flex-col gap-2">
+            <section class="md:flex gap-12 mb-12">
+                <img src="./static/assets/bookCoverFiller.png" alt="Capa do Livro"
+                    class="w-full rounded-lg mx-auto mb-4 md:w-6/12 max-h-screen">
+                <div class="md:flex-1 my-auto">
+                    <ul class="flex gap-2 text-xs text-emerald-700 mb-4">
+                        <li class="py-1 px-2 bg-emerald-100 rounded"><a href="">Literatura Brasileira</a></li>
+                        <li class="py-1 px-2 bg-emerald-100 rounded"><a href="">Romance</a></li>
+                        <li class="py-1 px-2 bg-emerald-100 rounded"><a href="">Ficção</a></li>
+                    </ul>
+                    <h1 class="text-3xl font-bold text-slate-800 mb-1">Memórias Póstumas de Brás Cubas</h1>
+                    <strong class="font-semibold text-xl text-slate-600"><a href="">Machado de Assis</a></strong>
+                    <ul class="grid grid-cols-2 gap-1 justify-between my-4 text-slate-500">
+                        <li>455 Avaliações:
+                            <span>
+                                <button><img src="./static/assets/icons/filled-star.svg" alt="Estrla"></button>
+                                <button><img src="./static/assets/icons/filled-star.svg" alt="Estrla"></button>
+                                <button><img src="./static/assets/icons/filled-star.svg" alt="Estrla"></button>
+                                <button><img src="./static/assets/icons/filled-star.svg" alt="Estrla"></button>
+                                <button><img src="./static/assets/icons/unfilled-star.svg" alt="Estrla"></button>
+                            </span>
+                        </li>
+                        <li class="justify-self-end">50 Comentários</li>
+                        <li>8º Edição</li>
+                        <li class="justify-self-end">Editora Intrinseca</li>
+                        <li>6 Exemplares</li>
+                    </ul>
+                    <div class="flex gap-4 my-8">
+                        <button
+                            class="flex-1 py-2 rounded bg-emerald-500 hover:bg-emerald-600 text-slate-50 font-medium">Adicionar
+                            a Sua Lista</button>
+                        <a class="flex-1 py-2 rounded border-2 border-emerald-500 text-center font-medium text-emerald-600 hover:border-emerald-600 hover:text-emerald-700"
+                            href="">Deixe o seu Comentário</a>
+                    </div>
+                    <div>
+                        <h2 class="text-lg font-medium text-slate-600">Síntese</h2>
+                        <p class="text-slate-500">Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore, enim,
+                            sequi accusamus beatae
+                            incidunt reprehenderit ab vero, minima deleniti sunt accusantium similique inventore? Aut,
+                            nihil facilis pariatur, sed quos totam dolor libero ad error quidem voluptas commodi quaerat
+                            dolorum amet ducimus beatae atque nobis! Alias culpa aspernatur sequi ratione beatae.</p>
+                    </div>
+                </div>
+            </section>
 
+            <section>
+                <h2 class="font-semibold text-xl text-slate-600">Deixe o seu Comentário</h2>
+
+                <form class="flex flex-col my-8 items-end gap-2">
+                    <article class="p-4 bg-white border rounded-lg w-full">
+                        <header class="flex gap-2 mb-2">
+                            <img src=" ./static/assets/profileFiller.png" alt="Fulano">
+                            <div class="hidden md:flex flex-col justify-center items-start w-fit">
+                                <span class="text-slate-700 text-sm md:text-base block leading-none">Fulano de
+                                    tal</span>
+                                <span class="block text-xs font-light text-slate-500 leading-none">Aluno</span>
+                            </div>
+                        </header>
+                        <textarea name="comment"class="w-full h-8 p-1" placeholder="O que você achou dessa obra?"></textarea>
+                    </article>
+
+                    <button class="w-min px-4 py-2 bg-emerald-500 rounded-lg font-medium text-slate-50">Comentar</button> <!-- Responder Fulano-->
+                </form>
+
+                <div>
+                    <article>
+                        <header>
+                            <img src="./static/assets/profileFiller.png" alt="Fulano">
+                            <div class="hidden md:flex flex-col justify-center items-end w-fit">
+                                <span class="text-slate-700 text-sm md:text-base block leading-none">Fulano de
+                                    tal</span>
+                                <span class="block text-xs font-light text-slate-500 leading-none">Aluno</span>
+                            </div>
+                        </header>
+                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolor officia, explicabo repellat
+                            impedit, voluptates maiores voluptas totam, fugit rerum at vero labore? Consectetur tempore,
+                            nisi rem nihil minima eaque velit.</p>
+                        <a href="#">Responder <img src="./static/assets/icons/comment.svg" alt="Responder"></a>
+                    </article>
+                </div>
+            </section>
         </main>
 
         <footer class="bg-emerald-600">
             <div class="w-full max-w-7xl mx-auto py-8 px-2 flex items-center justify-between">
                 <div>
-                    <img src="./assets/eStante-white.svg" alt="eStante" class="mb-4 md:mb-6" />
+                    <img src="./static/assets/eStante-white.svg" alt="eStante" class="mb-4 md:mb-6" />
                     <p class="text-xs text-slate-200 max-w-lg font-light">
                         O eStante foi um projeto desenvolvido para a Prática Profissional
                         Integrada (PPI) da turma do 3º ano do Curso Técnico em Informática
                         Integrado ao Ensino Médio, no ano de 2022.
                     </p>
                 </div>
-                <a href="#" class="hidden md:block p-2 bg-slate-50 rounded-md"><img src="./assets/icons/arrow-up.svg"
-                        alt="De volta ao topo" /></a>
+                <a href="#" class="hidden md:block p-2 bg-slate-50 rounded-md"><img
+                        src="./static/assets/icons/arrow-up.svg" alt="De volta ao topo" /></a>
             </div>
             <div class="flex justify-center items-center bg-slate-50 py-1">
                 <p class="text-xs text-slate-600">
                     Made with
-                    <img src="./assets/icons/heart.svg" alt="Love" class="inline w-3" />
+                    <img src="./static/assets/icons/heart.svg" alt="Love" class="inline w-3" />
                     by Amanda, Josué, Tobias and Wagner - 34/22
                 </p>
             </div>

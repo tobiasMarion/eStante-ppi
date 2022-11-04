@@ -1,4 +1,4 @@
-const inputs = document.querySelectorAll('.input-container-effect input')
+const inputs = document.querySelectorAll('.input-container-effect input, .input-container-effect textarea')
 
 inputs.forEach(input => {
     input.addEventListener('focus', event => {

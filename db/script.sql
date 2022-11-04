@@ -2,19 +2,20 @@ CREATE DATABASE IF NOT EXISTS eStante;
 
 USE eStante;
 
-CREATE TABLE IF NOT EXISTS user (
-    userID INT NOT NULL AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS person (
+    personID INT NOT NULL AUTO_INCREMENT,
     name VARCHAR(250),
     registration VARCHAR(250),
     cpf varchar(11),
     email VARCHAR(250),
     password VARCHAR(256),
     course VARCHAR(250),
-    isStudent BOOLEAN,
+    type ENUM('TEACHER', 'STUDENT', 'EMPLOYEE'),
     library VARCHAR(250),
     isAway BOOLEAN,
+    permissionLevel ENUM('ADMIN', 'EMPLOYEE', 'MODERATOR', 'READER'),
 
-    PRIMARY KEY(userID)
+    PRIMARY KEY(personID)
 );
 
 CREATE TABLE IF NOT EXISTS collection (
@@ -42,35 +43,52 @@ CREATE TABLE IF NOT EXISTS item (
     classification VARCHAR(250),
     isDigital BOOLEAN,
     link VARCHAR(500),
-    number VARCHAR(100) cover VARCHAR(250),
-    
+    number VARCHAR(100),
+    cover VARCHAR(250),
     collectionID INT NOT NULL,
-    -- AUTHORS
-    -- TRANSLATORS
-    -- TAGS
-    
+    -- Verificar
+    translators VARCHAR(100),
+    authors VARCHAR(100),
+
     PRIMARY KEY(itemID),
-    FOREIGN KEY (collectionID) REFERENCES Persons(collectionID)
+    FOREIGN KEY (collectionID) REFERENCES collection (collectionID)
+);
+
+CREATE TABLE IF NOT EXISTS tag (
+    tagID INT NOT NULL AUTO_INCREMENT,
+    value varchar(100),
+
+    PRIMARY KEY(tagID)
+);
+
+CREATE TABLE IF NOT EXISTS itemTag (
+    tagID INT NOT NULL,
+    itemID INT NOT NULL,
+
+    PRIMARY KEY (tagID, itemID),
+    FOREIGN KEY (tagID) REFERENCES tag(tagID),
+    FOREIGN KEY (itemID) REFERENCES item(itemID)
 );
 
 CREATE TABLE IF NOT EXISTS comment (
     commentID INT NOT NULL AUTO_INCREMENT,
-    userID INT NOT NULL,
+    personID INT NOT NULL,
     itemID INT NOT NULL,
     content VARCHAR(2000),
+    replyTo INT,
 
     PRIMARY KEY(commentID),
-    FOREIGN KEY (userID) REFERENCES Persons(userID),    
-    FOREIGN KEY (itemID) REFERENCES Persons(itemID)
+    FOREIGN KEY (personID) REFERENCES person(personID),
+    FOREIGN KEY (itemID) REFERENCES item(itemID),
+    FOREIGN KEY (replyTo) REFERENCES comment(commentID)
 );
 
 CREATE TABLE IF NOT EXISTS evaluation (
-    evaluationID INT NOT NULL AUTO_INCREMENT,
-    userID INT NOT NULL,
+    personID INT NOT NULL,
     itemID INT NOT NULL,
     value INT,
-
-    PRIMARY KEY(evaluationID),
-    FOREIGN KEY (userID) REFERENCES Persons(userID),
-    FOREIGN KEY (itemID) REFERENCES Persons(itemID)
+    
+    PRIMARY KEY(personID, itemID),
+    FOREIGN KEY (personID) REFERENCES person(personID),
+    FOREIGN KEY (itemID) REFERENCES item(itemID)
 );
