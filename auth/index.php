@@ -1,30 +1,30 @@
 <?php
     include('../db/connection.php');
 
-    $tryedToLog = isset($_POST['email']) && isset($_POST['password']);
-
-    if ($tryedToLog) {
+    if (isset($_POST['submit'])) {
         $email = $mysqli->real_escape_string($_POST['email']);
         $password = $mysqli->real_escape_string($_POST['password']);
 
-        $sql_code = "SELECT * FROM person WHERE email='$email' AND password='$password'";
+        $sql_code = "SELECT * FROM person WHERE email='$email'";
         $sql_query = $mysqli->query($sql_code) or die("Falha na execução do código SQL: " . $mysqli);
-    
         $rows = $sql_query->num_rows;
-
         global $rows;
 
         if ($rows == 1) {
             $user = $sql_query->fetch_assoc();
-
-            if (!isset($_SESSION)) {
-                session_start();
-            }
+            $password_match = password_verify($password, $user['password']);
             
-            $_SESSION['id'] = $user['personID'];
-            $_SESSION['name'] = $user['name'];
+            if ($password_match) {
+                if (!isset($_SESSION)) {
+                    session_start();
+                }
+                
+                $_SESSION['id'] = $user['personID'];
+                $_SESSION['name'] = $user['name'];
+    
+                header("Location: ../index.php");
+            }
 
-            header("Location: ../index.php");
         }
     }
 ?>
@@ -90,14 +90,14 @@
                 </div>
 
                 <?php 
-                    if ($tryedToLog && $rows < 1) {
+                    if ((isset($_POST['submit']) && $rows < 1) || !$password_match) {
                         echo('<p class="text-sm text-red-400 font-light text-center mt-4">Email ou senha incorrentos</p>');
                     }
                 ?>
 
-                <button type="submit" class="py-2 bg-emerald-400 rounded-lg	my-4 text-slate-50 hover:bg-emerald-500">Login</button>
+                <button type="submit" name="submit" class="py-2 bg-emerald-400 rounded-lg my-4 text-slate-50 hover:bg-emerald-500">Login</button>
 
-                <p class="text-center text-sm text-slate-500">Não possui uma conta? <a href="#" class="text-emerald-500 font-medium">Crie uma agora</a></p>
+                <p class="text-center text-sm text-slate-500">Não possui uma conta? <a href="../user/create.php" class="text-emerald-500 font-medium">Crie uma agora</a></p>
             </form>
         </main>
     </div>

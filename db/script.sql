@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS person (
     registration VARCHAR(250),
     cpf varchar(11),
     email VARCHAR(250),
-    password VARCHAR(256),
+    password VARCHAR(255),
     type ENUM('student', 'employee'),
     course VARCHAR(250),
     campus VARCHAR(250),

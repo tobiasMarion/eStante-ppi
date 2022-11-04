@@ -13,10 +13,21 @@
         $course = $mysqli->real_escape_string($_POST['course']);
         $regular = $mysqli->real_escape_string($_POST['regular']);
 
-        $sql_code = "INSERT INTO `person` (`name`, `registration`, `cpf`, `email`, `password`, `type`, `course`, `campus`, `regular`) VALUES ('$name', '$registration', '$cpf', '$email', '$password', '$type', '$course', '$campus', '1')";
+        $sql_code = "SELECT * FROM person WHERE email='$email'";
+        $sql_query = $mysqli->query($sql_code) or die("Falha na execução do código SQL: " . $mysqli);
+        $rows = $sql_query->num_rows;
 
-        $sql_query = $mysqli->query($sql_code) or die("Falha na execução do código SQL: " . $mysqli);        
-    }
+        global $rows;
+
+        if ($rows == 0) {
+            $password = password_hash($password, PASSWORD_DEFAULT);
+            $sql_code = "INSERT INTO `person` (`name`, `registration`, `cpf`, `email`, `password`, `type`, `course`, `campus`, `regular`) VALUES ('$name', '$registration', '$cpf', '$email', '$password', '$type', '$course', '$campus', '$regular')";
+    
+            $sql_query = $mysqli->query($sql_code) or die("Falha na execução do código SQL: " . $mysqli);
+            header("Location: ../auth/");
+        }
+        
+    }   
 ?>
 
 <!DOCTYPE html>
@@ -179,14 +190,21 @@
                             <label for="student"
                                 class="text-base text-slate-500 font-medium cursor-pointer">Situação</label>
                             <div class="flex gap-1">
-                                <input type="radio" name="regular" id="regular" value="true" checked>
+                                <input type="radio" name="regular" id="regular" value="1" checked>
                                 <label for="regular" class="mr-4 text-slate-500">Regular</label>
-                                <input type="radio" name="regular" id="away" value="false">
+                                <input type="radio" name="regular" id="away" value="0">
                                 <label for="away" class="mr-4 text-slate-500">Afastado</label>
                             </div>
                         </div>
                     </div>
                 </fieldset>
+
+                <?php 
+                    if (isset($_POST['submit'])) {
+                        echo('<p class="text-sm text-red-400 font-light text-center my-4">Já existe um usuário cadastrado com esse email.</p>');
+                    }
+                ?>
+
                 <button class="w-full py-2 text-lg text-slate-50 bg-emerald-500 hover:bg-emerald-600 rounded-lg" name="submit">Cadastrar</button>
             </form>
         </main>
