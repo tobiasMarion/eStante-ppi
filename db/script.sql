@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS person (
     course VARCHAR(250),
     type ENUM('TEACHER', 'STUDENT', 'EMPLOYEE'),
     library VARCHAR(250),
-    isAway BOOLEAN,
+    regular BOOLEAN,
     permissionLevel ENUM('ADMIN', 'EMPLOYEE', 'MODERATOR', 'READER'),
 
     PRIMARY KEY(personID)
