@@ -46,12 +46,41 @@ CREATE TABLE IF NOT EXISTS item (
     number VARCHAR(100),
     cover VARCHAR(250),
     collectionID INT NOT NULL,
-    -- Verificar
-    translators VARCHAR(100),
-    authors VARCHAR(100),
 
     PRIMARY KEY(itemID),
     FOREIGN KEY (collectionID) REFERENCES collection (collectionID)
+);
+
+CREATE TABLE IF NOT EXISTS author (
+    authorID INT NOT NULL AUTO_INCREMENT,
+    name VARCHAR(250),
+
+    PRIMARY KEY(authorID)
+);
+
+CREATE TABLE IF NOT EXISTS translator (
+    translatorID INT NOT NULL AUTO_INCREMENT,
+    name VARCHAR(250),
+
+    PRIMARY KEY(translatorID)
+);
+
+CREATE TABLE IF NOT EXISTS itemAutor (
+    authorID INT NOT NULL,
+    itemID INT NOT NULL,
+
+    PRIMARY KEY (authorID, itemID),
+    FOREIGN KEY (authorID) REFERENCES author(authorID),
+    FOREIGN KEY (itemID) REFERENCES item(itemID)
+);
+
+CREATE TABLE IF NOT EXISTS itemTranslator (
+    translatorID INT NOT NULL,
+    itemID INT NOT NULL,
+
+    PRIMARY KEY (translatorID, itemID),
+    FOREIGN KEY (translatorID) REFERENCES translator(translatorID),
+    FOREIGN KEY (itemID) REFERENCES item(itemID)
 );
 
 CREATE TABLE IF NOT EXISTS tag (
@@ -89,6 +118,15 @@ CREATE TABLE IF NOT EXISTS evaluation (
     value INT,
     
     PRIMARY KEY(personID, itemID),
+    FOREIGN KEY (personID) REFERENCES person(personID),
+    FOREIGN KEY (itemID) REFERENCES item(itemID)
+);
+
+CREATE TABLE IF NOT EXISTS itemPerson (
+    personID INT NOT NULL,
+    itemID INT NOT NULL,
+
+    PRIMARY KEY (personID, itemID),
     FOREIGN KEY (personID) REFERENCES person(personID),
     FOREIGN KEY (itemID) REFERENCES item(itemID)
 );
