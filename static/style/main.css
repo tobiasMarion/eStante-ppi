@@ -3,6 +3,7 @@
 * {
     font-family: 'Poppins', sans-serif;
     transition: ease-out 0.3s;
+    scroll-behavior: smooth;
 }
 
 :root {
@@ -38,4 +39,13 @@ label, input, select, option {
     bottom: -2px;
     left: 10px;
     width: calc(100% - 20px);
+}
+
+.control-panel > *:hover > header span {
+    opacity: 1;
+    transition: .1s ease-out;
+}
+
+.negative-margin {
+    margin-top: -3rem;
 }
