@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>eStante | Qual obra você vai retirar da eStante hoje?</title>
+
+    <link rel="shortcut icon" href="../static/assets/icon.svg" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
+        rel="stylesheet">
+
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link rel="stylesheet" href="../static/style/main.css">
+
+</head>
+
+<body>
+    <div class="bg-slate-50 flex flex-col min-h-screen">
+        <header class="w-full bg-emerald-500 px-2">
+            <div class="w-full max-w-3xl mx-auto pt-8 pb-24">
+                <a href="../"><img src="../static/assets/eStante-white.svg" alt="eStante" class="mx-auto mb-8"></a>
+                <h1 class="text-4xl font-semibold text-slate-50 mb-4">Cadastro de Usuário</h1>
+                <p class="text-sm md:text-base text-slate-200">Preencha o formulário para poder explorar o acervo da biblioteca.</p>
+            </div>
+        </header>
+
+        <main class="w-full flex-grow mb-8 md:mb-16 px-2 flex-1">
+            <form action="" class="max-w-3xl negative-margin border drop-shadow drop-shadow-sm rounded-lg bg-white w-full mx-auto p-4">
+                <fieldset>
+                    <legend>Dados Pessoais</legend>
+                    <div class="flex flex-col gap-1 mb-4">
+                        <label for="name" class="text-base text-slate-500 font-medium cursor-pointer">Nome</label>
+                        <div class="flex gap-2 border rounded-lg border-1 border-slate-300 p-1 input-container-effect relative">
+                            <img src="../static/assets/icons/user.svg" alt="Usuário" class="mr-1 pr-1 border-r-2 border-slate-200">
+                            <input type="text" name="name" id="name" class="outline-0 bg-transparent text-base text-slate-500 w-full" placeholder="João da Silva" required>
+                        </div>
+                    </div>
+                </fieldset> 
+            </form>
+        </main>
+
+        <footer class="bg-emerald-500">
+            <div class="w-full max-w-7xl mx-auto py-8 px-2 flex items-center justify-between">
+                <div>
+                    <img src="../static/assets/eStante-white.svg" alt="eStante" class="mb-4 md:mb-6">
+                    <p class="text-xs text-slate-200 max-w-lg font-light">O eStante foi um projeto desenvolvido para a
+                        Prática Profissional Integrada (PPI) da turma do 3º
+                        ano do Curso Técnico em Informática Integrado ao Ensino Médio, no ano de 2022.</p>
+                </div>
+                <a href="#" class="hidden md:block p-2 bg-slate-50 rounded-md"><img
+                        src="../static/assets/icons/arrow-up.svg" alt="De volta ao topo"></a>
+            </div>
+            <div class="flex justify-center items-center bg-slate-50 py-1">
+                <p class="text-xs text-slate-600">Made with <img src="../static/assets/icons/heart.svg" alt="Love"
+                        class="inline w-3"> by Amanda, Josué, Tobias and Wagner - 34/22
+                </p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="../static/scripts/inputEffect.js"></script>
+</body>
+
+</html>

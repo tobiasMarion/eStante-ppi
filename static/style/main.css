@@ -45,3 +45,7 @@ label, input, select, option {
     opacity: 1;
     transition: .1s ease-out;
 }
+
+.negative-margin {
+    margin-top: -3rem;
+}
