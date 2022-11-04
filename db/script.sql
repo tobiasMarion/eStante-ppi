@@ -9,11 +9,11 @@ CREATE TABLE IF NOT EXISTS person (
     cpf varchar(11),
     email VARCHAR(250),
     password VARCHAR(256),
+    type ENUM('student', 'employee'),
     course VARCHAR(250),
-    type ENUM('TEACHER', 'STUDENT', 'EMPLOYEE'),
-    library VARCHAR(250),
+    campus VARCHAR(250),
     regular BOOLEAN,
-    permissionLevel ENUM('ADMIN', 'EMPLOYEE', 'MODERATOR', 'READER'),
+    permissionLevel ENUM('admin', 'employee', 'moderator', 'reader') DEFAULT 'reader',
 
     PRIMARY KEY(personID)
 );
