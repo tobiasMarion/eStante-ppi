@@ -1,3 +1,35 @@
+<?php
+    include('../db/connection.php');
+
+    if (isset($_POST['submit'])) {
+        $name = $mysqli->real_escape_string($_POST['name']);
+        $registration = $mysqli->real_escape_string($_POST['registration']);
+        $cpf = $mysqli->real_escape_string($_POST['cpf']);
+        $email = $mysqli->real_escape_string($_POST['email']);
+        $password = $mysqli->real_escape_string($_POST['password']);
+        $course = $mysqli->real_escape_string($_POST['course']);
+        $type = $mysqli->real_escape_string($_POST['type']);
+        $campus = $mysqli->real_escape_string($_POST['campus']);
+        $course = $mysqli->real_escape_string($_POST['course']);
+        $regular = $mysqli->real_escape_string($_POST['regular']);
+
+        $sql_code = "SELECT * FROM person WHERE email='$email'";
+        $sql_query = $mysqli->query($sql_code) or die("Falha na execução do código SQL: " . $mysqli);
+        $rows = $sql_query->num_rows;
+
+        global $rows;
+
+        if ($rows == 0) {
+            $password = password_hash($password, PASSWORD_DEFAULT);
+            $sql_code = "INSERT INTO `person` (`name`, `registration`, `cpf`, `email`, `password`, `type`, `course`, `campus`, `regular`) VALUES ('$name', '$registration', '$cpf', '$email', '$password', '$type', '$course', '$campus', '$regular')";
+    
+            $sql_query = $mysqli->query($sql_code) or die("Falha na execução do código SQL: " . $mysqli);
+            header("Location: ../auth/");
+        }
+        
+    }   
+?>
+
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -31,7 +63,7 @@
         </header>
 
         <main class="w-full flex-grow mb-8 md:mb-16 px-2 flex-1">
-            <form action=""
+            <form action="" method="POST"
                 class="max-w-3xl negative-margin border drop-shadow drop-shadow-sm rounded-lg bg-white w-full mx-auto p-8">
                 <fieldset class="mb-8">
                     <legend class="text-2xl text-slate-600 font-semibold mb-4">Dados Pessoais</legend>
@@ -63,16 +95,22 @@
                                 placeholder="********" required
                                 pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$">
                         </div>
+                        <ul class="text-slate-400 text-xs ml-4">
+                            <li>Mínimo de 8 caracteres</li>
+                            <li>Mínimo de 1 letra maiúscula</li>
+                            <li>Mínimo de 1 número</li>
+                            <li>Mínimo de 1 símbolo (!#$)</li>
+                        </ul>
                     </div>
                 </fieldset>
                 <fieldset class="mb-8">
                     <legend class="text-2xl text-slate-600 font-semibold mb-4">Dados Acadêmicos/Profissionais</legend>
                     <div class="flex flex-col gap-1 mb-4">
-                        <label for="code"
+                        <label for="registration"
                             class="text-base text-slate-500 font-medium cursor-pointer">Matrícula/CIAP</label>
                         <div
                             class="flex gap-2 border rounded-lg border-1 border-slate-300 p-1 input-container-effect relative">
-                            <input type="text" name="code" id="code"
+                            <input type="text" name="registration" id="registration"
                                 class="outline-0 bg-transparent text-base text-slate-500 w-full pl-1"
                                 placeholder="2020300000" required>
                         </div>
@@ -82,10 +120,31 @@
                             Institucional <small>(@iffar)</small></label>
                         <div
                             class="flex gap-2 border rounded-lg border-1 border-slate-300 p-1 input-container-effect relative">
-                            <input type="text" name="email" id="email"
+                            <input type="email" name="email" id="email"
                                 class="outline-0 bg-transparent text-base text-slate-500 w-full pl-1"
                                 placeholder="joao@aluno.iffar.edu.br" required
                                 pattern=".*@(?:iffar|aluno\.iffar|iffarroupilha)\.edu\.br">
+                        </div>
+                    </div>
+                    <div class="flex flex-col gap-1 mb-4">
+                        <label for="campus" class="text-base text-slate-500 font-medium cursor-pointer">Campus</label>
+                        <div
+                            class="flex gap-2 border rounded-lg border-1 border-slate-300 p-1 input-container-effect relative">
+
+                            <select class="w-full text-slate-500" name="campus" id="campus" required>
+                                <option value="Frederico Westphalen">Frederico Westphalen</option>
+                                <option value="Alegrete">Alegrete</option>
+                                <option value="Jaguari">Jaguari</option>
+                                <option value="Júlio de Castilhos">Júlio de Castilhos</option>
+                                <option value="Panambi">Panambi</option>
+                                <option value="Santa Rosa">Santa Rosa</option>
+                                <option value="Santo Augusto">Santo Augusto</option>
+                                <option value="Santo Augusto">Santo Augusto</option>
+                                <option value="Santo Ângelo">Santo Ângelo</option>
+                                <option value="São Borja">São Borja</option>
+                                <option value="São Vicente do Sul">São Vicente do Sul</option>
+                                <option value="Uruguaiana">Uruguaiana</option>
+                            </select>
                         </div>
                     </div>
                     <div class="flex flex-col gap-1 mb-8">
@@ -121,9 +180,9 @@
                             <label for="student"
                                 class="text-base text-slate-500 font-medium cursor-pointer">Categoria</label>
                             <div class="flex gap-1">
-                                <input type="radio" name="category" id="student" value="student" checked>
+                                <input type="radio" name="type" id="student" value="student" checked>
                                 <label for="student" class="mr-4 text-slate-500">Aluno</label>
-                                <input type="radio" name="category" id="employee" value="employee">
+                                <input type="radio" name="type" id="employee" value="employee">
                                 <label for="employee" class="mr-4 text-slate-500">Servidor</label>
                             </div>
                         </div>
@@ -131,15 +190,22 @@
                             <label for="student"
                                 class="text-base text-slate-500 font-medium cursor-pointer">Situação</label>
                             <div class="flex gap-1">
-                                <input type="radio" name="regular" id="regular" value="true" checked>
+                                <input type="radio" name="regular" id="regular" value="1" checked>
                                 <label for="regular" class="mr-4 text-slate-500">Regular</label>
-                                <input type="radio" name="regular" id="away" value="false">
+                                <input type="radio" name="regular" id="away" value="0">
                                 <label for="away" class="mr-4 text-slate-500">Afastado</label>
                             </div>
                         </div>
                     </div>
                 </fieldset>
-                <button class="w-full py-2 text-lg text-slate-50 bg-emerald-500 hover:bg-emerald-600 rounded-lg">Cadastrar</button>
+
+                <?php 
+                    if (isset($_POST['submit'])) {
+                        echo('<p class="text-sm text-red-400 font-light text-center my-4">Já existe um usuário cadastrado com esse email.</p>');
+                    }
+                ?>
+
+                <button class="w-full py-2 text-lg text-slate-50 bg-emerald-500 hover:bg-emerald-600 rounded-lg" name="submit">Cadastrar</button>
             </form>
         </main>
 
