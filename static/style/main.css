@@ -10,12 +10,16 @@
     --swiper-theme-color: #059669 !important;
 }
 
-body, body > div {
+body,
+body>div {
     min-height: 100vh;
     background: #F8FAFC;
 }
 
-label, input, select, option {
+label,
+input,
+select,
+option {
     cursor: pointer;
     outline: none;
 }
@@ -41,7 +45,7 @@ label, input, select, option {
     width: calc(100% - 20px);
 }
 
-.control-panel > *:hover > header span {
+.control-panel>*:hover>header span {
     opacity: 1;
     transition: .1s ease-out;
 }

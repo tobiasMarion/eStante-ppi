@@ -14,6 +14,7 @@ CREATE TABLE IF NOT EXISTS person (
     campus VARCHAR(250),
     regular BOOLEAN,
     permissionLevel ENUM('admin', 'employee', 'moderator', 'reader') DEFAULT 'reader',
+    avatar VARCHAR(255),
 
     PRIMARY KEY(personID)
 );
