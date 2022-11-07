@@ -2,7 +2,7 @@ CREATE DATABASE IF NOT EXISTS eStante;
 
 USE eStante;
 
-CREATE TABLE IF NOT EXISTS person (
+CREATE TABLE IF NOT EXISTS Person (
     personID INT NOT NULL AUTO_INCREMENT,
     name VARCHAR(250),
     registration VARCHAR(250),
@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS person (
     PRIMARY KEY(personID)
 );
 
-CREATE TABLE IF NOT EXISTS collection (
+CREATE TABLE IF NOT EXISTS Collection (
     collectionID INT NOT NULL AUTO_INCREMENT,
     type VARCHAR(250),
     cdu VARCHAR(250),
@@ -27,11 +27,11 @@ CREATE TABLE IF NOT EXISTS collection (
     PRIMARY KEY(collectionID)
 );
 
-CREATE TABLE IF NOT EXISTS item (
+CREATE TABLE IF NOT EXISTS Item (
     itemID INT NOT NULL AUTO_INCREMENT,
-    isbn varchar(100),
     title VARCHAR(250),
     subtitle VARCHAR(250),
+    isbn varchar(100),
     edition INT,
     publisher VARCHAR(250),
     year INT,
@@ -49,58 +49,58 @@ CREATE TABLE IF NOT EXISTS item (
     collectionID INT NOT NULL,
 
     PRIMARY KEY(itemID),
-    FOREIGN KEY (collectionID) REFERENCES collection (collectionID)
+    FOREIGN KEY (collectionID) REFERENCES Collection(collectionID)
 );
 
-CREATE TABLE IF NOT EXISTS author (
+CREATE TABLE IF NOT EXISTS Author (
     authorID INT NOT NULL AUTO_INCREMENT,
     name VARCHAR(250),
 
     PRIMARY KEY(authorID)
 );
 
-CREATE TABLE IF NOT EXISTS translator (
+CREATE TABLE IF NOT EXISTS Translator (
     translatorID INT NOT NULL AUTO_INCREMENT,
     name VARCHAR(250),
 
     PRIMARY KEY(translatorID)
 );
 
-CREATE TABLE IF NOT EXISTS itemAutor (
+CREATE TABLE IF NOT EXISTS ItemAutor (
     authorID INT NOT NULL,
     itemID INT NOT NULL,
 
     PRIMARY KEY (authorID, itemID),
-    FOREIGN KEY (authorID) REFERENCES author(authorID),
-    FOREIGN KEY (itemID) REFERENCES item(itemID)
+    FOREIGN KEY (authorID) REFERENCES Author(authorID),
+    FOREIGN KEY (itemID) REFERENCES Item(itemID)
 );
 
-CREATE TABLE IF NOT EXISTS itemTranslator (
+CREATE TABLE IF NOT EXISTS ItemTranslator (
     translatorID INT NOT NULL,
     itemID INT NOT NULL,
 
     PRIMARY KEY (translatorID, itemID),
-    FOREIGN KEY (translatorID) REFERENCES translator(translatorID),
-    FOREIGN KEY (itemID) REFERENCES item(itemID)
+    FOREIGN KEY (translatorID) REFERENCES Translator(translatorID),
+    FOREIGN KEY (itemID) REFERENCES Item(itemID)
 );
 
-CREATE TABLE IF NOT EXISTS tag (
+CREATE TABLE IF NOT EXISTS Tag (
     tagID INT NOT NULL AUTO_INCREMENT,
     value varchar(100),
 
     PRIMARY KEY(tagID)
 );
 
-CREATE TABLE IF NOT EXISTS itemTag (
+CREATE TABLE IF NOT EXISTS ItemTag (
     tagID INT NOT NULL,
     itemID INT NOT NULL,
 
     PRIMARY KEY (tagID, itemID),
-    FOREIGN KEY (tagID) REFERENCES tag(tagID),
-    FOREIGN KEY (itemID) REFERENCES item(itemID)
+    FOREIGN KEY (tagID) REFERENCES Tag(tagID),
+    FOREIGN KEY (itemID) REFERENCES Item(itemID)
 );
 
-CREATE TABLE IF NOT EXISTS comment (
+CREATE TABLE IF NOT EXISTS Comment (
     commentID INT NOT NULL AUTO_INCREMENT,
     personID INT NOT NULL,
     itemID INT NOT NULL,
@@ -108,19 +108,19 @@ CREATE TABLE IF NOT EXISTS comment (
     replyTo INT,
 
     PRIMARY KEY(commentID),
-    FOREIGN KEY (personID) REFERENCES person(personID),
-    FOREIGN KEY (itemID) REFERENCES item(itemID),
-    FOREIGN KEY (replyTo) REFERENCES comment(commentID)
+    FOREIGN KEY (personID) REFERENCES Person(personID),
+    FOREIGN KEY (itemID) REFERENCES Item(itemID),
+    FOREIGN KEY (replyTo) REFERENCES Comment(commentID)
 );
 
-CREATE TABLE IF NOT EXISTS evaluation (
+CREATE TABLE IF NOT EXISTS Evaluation (
     personID INT NOT NULL,
     itemID INT NOT NULL,
     value INT,
     
     PRIMARY KEY(personID, itemID),
-    FOREIGN KEY (personID) REFERENCES person(personID),
-    FOREIGN KEY (itemID) REFERENCES item(itemID)
+    FOREIGN KEY (personID) REFERENCES Person(personID),
+    FOREIGN KEY (itemID) REFERENCES Item(itemID)
 );
 
 CREATE TABLE IF NOT EXISTS itemPerson (
@@ -128,6 +128,6 @@ CREATE TABLE IF NOT EXISTS itemPerson (
     itemID INT NOT NULL,
 
     PRIMARY KEY (personID, itemID),
-    FOREIGN KEY (personID) REFERENCES person(personID),
-    FOREIGN KEY (itemID) REFERENCES item(itemID)
+    FOREIGN KEY (personID) REFERENCES Person(personID),
+    FOREIGN KEY (itemID) REFERENCES Item(itemID)
 );

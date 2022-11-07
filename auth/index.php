@@ -34,6 +34,21 @@ if (isset($_POST['submit'])) {
             $_SESSION['name'] = $user['name'];
             $_SESSION['avatar'] = $user['avatar'];
 
+            switch ($user['permissionLevel']) {
+                case 'admin':
+                    $_SESSION['permission'] = 'Administrador';
+                    break;
+                case 'employee':
+                    $_SESSION['permission'] = 'Funcionário';
+                    break;
+                case 'moderator':
+                    $_SESSION['permission'] = 'Moderador';
+                    break;
+                default:
+                    $_SESSION['permission'] = 'Leitor';
+            }
+
+
             header("Location: ../");
         }
     }
