@@ -35,7 +35,7 @@ if (!isset($component_prefix_path)) {
             </div>
             <img src="<?= str_starts_with($_SESSION['avatar'], 'https://') ? $_SESSION['avatar'] : $component_prefix_path . $_SESSION['avatar'] ?>" alt="Fulano de Tal" class="w-12 h-auto rounded-full border border-2 border-emerald-500 object-cover">
 
-            <ul>
+            <!-- <ul>
                 <?php
                 if (in_array($_SESSION['permission'], ['Administrador', 'Moderador'])) {
                     echo ("<li ><a href=\"\" class=\"flex items-center gap-2 text-slate-500\"><img src=\"$component_prefix_path./static/assets/icons/slate-comment.svg\" alt=\"Comentários Pendentes\" class=\"w-4\"> Comentários Pendentes</a></li>");
@@ -49,7 +49,7 @@ if (!isset($component_prefix_path)) {
                 <li><a href="<?= $component_prefix_path ?>./auth/logout.php" class="flex items-center gap-2 text-slate-500"><img src="<?= $component_prefix_path ?>./static/assets/icons/log-out.svg" alt="Sair" class="w-4"> Sair</a></li>
 
 
-            </ul>
+            </ul> -->
         </div>
     </div>
 </header>
