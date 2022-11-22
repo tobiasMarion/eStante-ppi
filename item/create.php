@@ -22,14 +22,22 @@ if (isset($_POST['submit'])) {
     $classification = $mysqli->real_escape_string($_POST['classification']);
     $physicalDescription = $mysqli->real_escape_string($_POST['physicalDescription']);
 
-    $file = $_FILES['cover']['name'];
-    $path = pathinfo($file);
-    $ext = $path['extension'];
-    $temp_name = $_FILES['cover']['tmp_name'];
-    $permanent_name = uniqid() . "." . $ext;
-    $store_at = getcwd() . '/../db/uploads/covers/' . $permanent_name;
-    move_uploaded_file($temp_name, $store_at);
-    $cover = './db/' . $permanent_name;
+    // Handle Cover
+    function saveCover()
+    {
+        $file = $_FILES['cover']['name'];
+        $path = pathinfo($file);
+        $ext = $path['extension'];
+        $temp_name = $_FILES['cover']['tmp_name'];
+        $permanent_name = uniqid() . "." . $ext;
+        $store_at = getcwd() . '/../db/uploads/covers/' . $permanent_name;
+        move_uploaded_file($temp_name, $store_at);
+        $cover = './db/' . $permanent_name;
+        return $cover;
+    }
+
+    $cover = saveCover();
+
 
     // Handle Collection
     if ($collection == '+') {
@@ -51,26 +59,61 @@ if (isset($_POST['submit'])) {
 
         $tag = trim($tag);
 
-        $sql_code = "SELECT * from `tag` WHERE value='$tag'";
+        $sql_code = "SELECT * from tag WHERE value='$tag'";
         $sql_query = $mysqli->query($sql_code) or die("Falha na execução do código SQL: " . $mysqli);
         $rows = $sql_query->num_rows;
 
         if ($rows == 1) {
             $tag = $sql_query->fetch_assoc();
-            return $tag['tagID'];
+            return $tag["tagID"];
         } else {
-            $sql_code = "INSERT INTO `tag` (`value`) VALUES ('$tag')";
+            $sql_code = "INSERT INTO tag (`value`) VALUES ('$tag')";
             $mysqli->query($sql_code) or die("Falha na execução do código SQL: " . $mysqli);
-            $sql_query = $mysqli->query("SELECT LAST_INSERT_ID()") or die("Falha na execução do código SQL: " . $mysqli);
+
+            $sql_code = "SELECT * FROM tag WHERE value='$tag'";
+            $sql_query = $mysqli->query($sql_code) or die("Falha na execução do código SQL: " . $mysqli);
             $tag = $sql_query->fetch_assoc();
             return $tag['tagID'];
         }
     }
 
     $tags = explode(",", $tags);
-    array_map('createTagIfNotExists', $tags);
+    $tags = array_map('createTagIfNotExists', $tags);
+
+
+    // Handle type
+    $inventory = 0;
+    $url = null;
+    
+    $isDigital = $isDigital == "true" ? true : false;
+
+    if ($isDigital) {
+        $url = $mysqli->real_escape_string($_POST['url']);
+    } else {
+        $inventory = $mysqli->real_escape_string($_POST['inventory']);
+    }
+
 
     // Create Item
+    // title
+    // subtile
+    // collection
+    // isbn
+    // publisher
+    // year
+    // place
+    // synthesis
+    // library
+    // section
+    // isDigital
+    // inventory
+    // url
+    // number
+    // classification
+    // physicalDescription
+    // cover
+
+    // TAG-ITEM
 }
 ?>
 
@@ -107,7 +150,7 @@ if (isset($_POST['submit'])) {
                         <label for="collection" class="text-base text-slate-500 font-medium cursor-pointer">Tipo de Acervo</label>
                         <div class="flex gap-2 border rounded-lg border-1 border-slate-300 p-1 input-container-effect relative">
                             <select class="w-full text-slate-500" name="collection" id="collection" required>
-                                <option value="" selected>Livro</option>
+                                <option value="4" selected>Livro</option>
                                 <option value="">Revista</option>
                                 <option value="">Artigo</option>
                                 <option value="+">Cadastrar novo</option>
