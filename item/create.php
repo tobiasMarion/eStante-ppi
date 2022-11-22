@@ -4,6 +4,73 @@ include('../db/connection.php');
 $component_prefix_path = '../';
 
 if (isset($_POST['submit'])) {
+    $title = $mysqli->real_escape_string($_POST['title']);
+    $subtitle = $mysqli->real_escape_string($_POST['subtitle']);
+    $collection = $mysqli->real_escape_string($_POST['collection']);
+    $isbn = $mysqli->real_escape_string($_POST['isbn']);
+    $publisher = $mysqli->real_escape_string($_POST['publisher']);
+    $year = $mysqli->real_escape_string($_POST['year']);
+    $place = $mysqli->real_escape_string($_POST['place']);
+    $synthesis = $mysqli->real_escape_string($_POST['synthesis']);
+    $tags = $mysqli->real_escape_string($_POST['tags']);
+
+
+    $library = $mysqli->real_escape_string($_POST['library']);
+    $section = $mysqli->real_escape_string($_POST['section']);
+    $isDigital = $mysqli->real_escape_string($_POST['isDigital']);
+    $number = $mysqli->real_escape_string($_POST['number']);
+    $classification = $mysqli->real_escape_string($_POST['classification']);
+    $physicalDescription = $mysqli->real_escape_string($_POST['physicalDescription']);
+
+    $file = $_FILES['cover']['name'];
+    $path = pathinfo($file);
+    $ext = $path['extension'];
+    $temp_name = $_FILES['cover']['tmp_name'];
+    $permanent_name = uniqid() . "." . $ext;
+    $store_at = getcwd() . '/../db/uploads/covers/' . $permanent_name;
+    move_uploaded_file($temp_name, $store_at);
+    $cover = './db/' . $permanent_name;
+
+    // Handle Collection
+    if ($collection == '+') {
+        $newCollection = $mysqli->real_escape_string($_POST['newCollection']);
+        $cdu = $mysqli->real_escape_string($_POST['cdu']);
+
+        $sql_code = "INSERT INTO `collection` (`name`, `cdu`) VALUES ('$newCollection', '$cdu')";
+
+        $mysqli->query($sql_code) or die("Falha na execução do código SQL: " . $mysqli);
+        $sql_query = $mysqli->query("SELECT LAST_INSERT_ID()") or die("Falha na execução do código SQL: " . $mysqli);
+        $selectedCollection = $sql_query->fetch_assoc();
+        $collection = $selectedCollection['collectionId'];
+    }
+
+    // Handle Tags
+    function createTagIfNotExists($tag)
+    {
+        include('../db/connection.php');
+
+        $tag = trim($tag);
+
+        $sql_code = "SELECT * from `tag` WHERE value='$tag'";
+        $sql_query = $mysqli->query($sql_code) or die("Falha na execução do código SQL: " . $mysqli);
+        $rows = $sql_query->num_rows;
+
+        if ($rows == 1) {
+            $tag = $sql_query->fetch_assoc();
+            return $tag['tagID'];
+        } else {
+            $sql_code = "INSERT INTO `tag` (`value`) VALUES ('$tag')";
+            $mysqli->query($sql_code) or die("Falha na execução do código SQL: " . $mysqli);
+            $sql_query = $mysqli->query("SELECT LAST_INSERT_ID()") or die("Falha na execução do código SQL: " . $mysqli);
+            $tag = $sql_query->fetch_assoc();
+            return $tag['tagID'];
+        }
+    }
+
+    $tags = explode(",", $tags);
+    array_map('createTagIfNotExists', $tags);
+
+    // Create Item
 }
 ?>
 
@@ -40,15 +107,18 @@ if (isset($_POST['submit'])) {
                         <label for="collection" class="text-base text-slate-500 font-medium cursor-pointer">Tipo de Acervo</label>
                         <div class="flex gap-2 border rounded-lg border-1 border-slate-300 p-1 input-container-effect relative">
                             <select class="w-full text-slate-500" name="collection" id="collection" required>
-                                <option value="">Livro</option>
+                                <option value="" selected>Livro</option>
                                 <option value="">Revista</option>
                                 <option value="">Artigo</option>
                                 <option value="+">Cadastrar novo</option>
                             </select>
-                            <button type="button"><img src="../static/assets/icons/add.svg" alt="Adicionar"></button>
+                            <button type="button" id="newCollectionButton"><img src="../static/assets/icons/add.svg" alt="Adicionar"></button>
                         </div>
                         <div class="flex gap-2 border rounded-lg border-1 border-slate-300 p-1 input-container-effect relative">
-                            <input type="text" name="newCollection" id="newCollection" class="outline-0 bg-transparent text-base text-slate-500 w-full pl-1" placeholder="Novo tipo de acervo">
+                            <input type="text" name="newCollection" id="newCollection" class="outline-0 bg-transparent text-base text-slate-500 w-full pl-1" placeholder="Novo tipo de acervo" disabled="true">
+                        </div>
+                        <div class="flex gap-2 border rounded-lg border-1 border-slate-300 p-1 input-container-effect relative">
+                            <input type="text" name="cdu" id="cdu" class="outline-0 bg-transparent text-base text-slate-500 w-full pl-1" placeholder="CDU" disabled="true">
                         </div>
                     </div>
                     <div class="flex flex-col gap-1 mb-4">
@@ -127,9 +197,9 @@ if (isset($_POST['submit'])) {
                     <div class="flex flex-col gap-1 mb-4 flex-1">
                         <label for="student" class="text-base text-slate-500 font-medium cursor-pointer">Categoria</label>
                         <div class="flex gap-1">
-                            <input type="radio" name="type" id="digital" value="true" checked>
+                            <input type="radio" name="isDigital" id="digital" value="true" checked>
                             <label for="digital" class="mr-4 text-slate-500">Obra digital</label>
-                            <input type="radio" name="type" id="physical" value="false">
+                            <input type="radio" name="isDigital" id="physical" value="false">
                             <label for="physical" class="mr-4 text-slate-500">Obra Física</label>
                         </div>
                     </div>
@@ -142,7 +212,7 @@ if (isset($_POST['submit'])) {
                     <div class="flex flex-col gap-1 mb-4">
                         <label for="inventory" class="text-base text-slate-500 font-medium cursor-pointer">Estoque</label>
                         <div class="flex gap-2 border rounded-lg border-1 border-slate-300 p-1 input-container-effect relative">
-                            <input type="number" name="inventory" id="inventory" min="0" class="outline-0 bg-transparent text-base text-slate-500 w-full pl-1" placeholder="2" required>
+                            <input type="number" name="inventory" id="inventory" min="0" class="outline-0 bg-transparent text-base text-slate-500 w-full pl-1" placeholder="2" required disabled="true">
                         </div>
                     </div>
                     <div class="flex flex-col gap-1 mb-4">
@@ -166,7 +236,7 @@ if (isset($_POST['submit'])) {
                 </fieldset>
 
 
-                <button class="w-full py-2 mt-4 text-lg text-slate-50 bg-emerald-500 hover:bg-emerald-600 rounded-lg" name="submit">Cadastrar</button>
+                <button class="w-full py-2 mt-4 text-lg text-slate-50 bg-emerald-500 hover:bg-emerald-600 rounded-lg" type="submit" name="submit">Cadastrar</button>
             </form>
         </main>
 
@@ -176,6 +246,7 @@ if (isset($_POST['submit'])) {
     </div>
 
     <script src="../static/scripts/inputEffect.js"></script>
+    <script src="../static/scripts/createItemScript.js"></script>
 </body>
 
 </html>

@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS Person (
 
 CREATE TABLE IF NOT EXISTS Collection (
     collectionID INT NOT NULL AUTO_INCREMENT,
-    type VARCHAR(250),
+    name VARCHAR(250),
     cdu VARCHAR(250),
 
     PRIMARY KEY(collectionID)
