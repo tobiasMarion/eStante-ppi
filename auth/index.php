@@ -1,53 +1,68 @@
 <?php
-    include('../db/connection.php');
+include('../db/connection.php');
 
-    if (isset($_POST['submit'])) {
-        $email = $mysqli->real_escape_string($_POST['email']);
-        $password = $mysqli->real_escape_string($_POST['password']);
+if (isset($_POST['submit'])) {
+    $email = $mysqli->real_escape_string($_POST['email']);
+    $password = $mysqli->real_escape_string($_POST['password']);
+    $remember_me = false;
 
-        $sql_code = "SELECT * FROM person WHERE email='$email'";
-        $sql_query = $mysqli->query($sql_code) or die("Falha na execução do código SQL: " . $mysqli);
-        $rows = $sql_query->num_rows;
-        global $rows;
+    if (array_key_exists('remember-me', $_POST)) {
+        $remember_me = $mysqli->real_escape_string($_POST['remember-me']);
+    }
 
-        if ($rows == 1) {
-            $user = $sql_query->fetch_assoc();
-            $password_match = password_verify($password, $user['password']);
-            
-            if ($password_match) {
-                if (!isset($_SESSION)) {
-                    session_start();
-                }
-                
-                $_SESSION['id'] = $user['personID'];
-                $_SESSION['name'] = $user['name'];
-    
-                header("Location: ../index.php");
+    $sqlCode = "SELECT * FROM person WHERE email='$email'";
+    $sql_query = $mysqli->query($sqlCode) or die("Falha na execução do código SQL: " . $mysqli);
+    $rows = $sql_query->num_rows;
+    global $rows;
+
+    if ($rows == 1) {
+        $user = $sql_query->fetch_assoc();
+        $password_match = password_verify($password, $user['password']);
+        global $password_match;
+
+        if ($password_match) {
+            if (!isset($_SESSION)) {
+                session_start();
             }
 
+            if ($remember_me) {
+                $params = session_get_cookie_params();
+                setcookie(session_name(), $_COOKIE[session_name()], time() + 60 * 60 * 24 * 30, $params["path"], $params["domain"], $params["secure"], $params["httponly"]);
+            }
+
+            $_SESSION['id'] = $user['personID'];
+            $_SESSION['name'] = $user['name'];
+            $_SESSION['avatar'] = $user['avatar'];
+
+            switch ($user['permissionLevel']) {
+                case 'admin':
+                    $_SESSION['permission'] = 'Administrador';
+                    break;
+                case 'employee':
+                    $_SESSION['permission'] = 'Funcionário';
+                    break;
+                case 'moderator':
+                    $_SESSION['permission'] = 'Moderador';
+                    break;
+                default:
+                    $_SESSION['permission'] = 'Leitor';
+            }
+
+
+            header("Location: ../");
         }
     }
+}
 ?>
 
 
-<!DOCTYPE html>
-<html lang="pt-br">
+<?php
+include('../components/head.php');
+?>
 
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>eStante | Qual obra você vai retirar da eStante hoje?</title>
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
-        rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="../static/style/main.css">
     <link rel="shortcut icon" href="../static/assets/icon.svg" type="image/x-icon">
-
 </head>
 
 <body>
@@ -83,16 +98,16 @@
 
                 <div class="flex justify-between">
                     <div class="flex items-center gap-1">
-                        <input type="checkbox" name="remember-me" id="remember-me">
+                        <input type="checkbox" name="remember-me" id="remember-me" value="1">
                         <label for="remember-me" class="text-sm text-slate-500">Lembrar de mim</label>
                     </div>
                     <a href="#" class="text-emerald-500 text-sm font-medium">Esqueci minha senha</a>
                 </div>
 
-                <?php 
-                    if ((isset($_POST['submit']) && $rows < 1) || !$password_match) {
-                        echo('<p class="text-sm text-red-400 font-light text-center mt-4">Email ou senha incorrentos</p>');
-                    }
+                <?php
+                if (isset($_POST['submit']) && ($rows < 1 || !$password_match)) {
+                    echo ('<p class="text-sm text-red-400 font-light text-center mt-4">Email ou senha incorrentos</p>');
+                }
                 ?>
 
                 <button type="submit" name="submit" class="py-2 bg-emerald-400 rounded-lg my-4 text-slate-50 hover:bg-emerald-500">Login</button>
