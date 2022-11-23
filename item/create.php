@@ -10,9 +10,12 @@ if (isset($_POST['submit'])) {
     $isbn = $mysqli->real_escape_string($_POST['isbn']);
     $publisher = $mysqli->real_escape_string($_POST['publisher']);
     $year = $mysqli->real_escape_string($_POST['year']);
+    $edition = $mysqli->real_escape_string($_POST['edition']);
     $place = $mysqli->real_escape_string($_POST['place']);
     $synthesis = $mysqli->real_escape_string($_POST['synthesis']);
     $tags = $mysqli->real_escape_string($_POST['tags']);
+    $authors = $mysqli->real_escape_string($_POST['authors']);
+    $translators = $mysqli->real_escape_string($_POST['translators']);
 
 
     $library = $mysqli->real_escape_string($_POST['library']);
@@ -44,47 +47,18 @@ if (isset($_POST['submit'])) {
         $newCollection = $mysqli->real_escape_string($_POST['newCollection']);
         $cdu = $mysqli->real_escape_string($_POST['cdu']);
 
-        $sql_code = "INSERT INTO `collection` (`name`, `cdu`) VALUES ('$newCollection', '$cdu')";
+        $sqlCode = "INSERT INTO `collection` (`name`, `cdu`) VALUES ('$newCollection', '$cdu')";
 
-        $mysqli->query($sql_code) or die("Falha na execução do código SQL: " . $mysqli);
+        $mysqli->query($sqlCode) or die("Falha na execução do código SQL: " . $mysqli);
         $sql_query = $mysqli->query("SELECT LAST_INSERT_ID()") or die("Falha na execução do código SQL: " . $mysqli);
-        $selectedCollection = $sql_query->fetch_assoc();
-        $collection = $selectedCollection['collectionId'];
+        $collection = $sql_query->fetch_assoc();
+        $collection = $collection["LAST_INSERT_ID()"];
     }
-
-    // Handle Tags
-    function createTagIfNotExists($tag)
-    {
-        include('../db/connection.php');
-
-        $tag = trim($tag);
-
-        $sql_code = "SELECT * from tag WHERE value='$tag'";
-        $sql_query = $mysqli->query($sql_code) or die("Falha na execução do código SQL: " . $mysqli);
-        $rows = $sql_query->num_rows;
-
-        if ($rows == 1) {
-            $tag = $sql_query->fetch_assoc();
-            return $tag["tagID"];
-        } else {
-            $sql_code = "INSERT INTO tag (`value`) VALUES ('$tag')";
-            $mysqli->query($sql_code) or die("Falha na execução do código SQL: " . $mysqli);
-
-            $sql_code = "SELECT * FROM tag WHERE value='$tag'";
-            $sql_query = $mysqli->query($sql_code) or die("Falha na execução do código SQL: " . $mysqli);
-            $tag = $sql_query->fetch_assoc();
-            return $tag['tagID'];
-        }
-    }
-
-    $tags = explode(",", $tags);
-    $tags = array_map('createTagIfNotExists', $tags);
-
 
     // Handle type
     $inventory = 0;
     $url = null;
-    
+
     $isDigital = $isDigital == "true" ? true : false;
 
     if ($isDigital) {
@@ -95,25 +69,82 @@ if (isset($_POST['submit'])) {
 
 
     // Create Item
-    // title
-    // subtile
-    // collection
-    // isbn
-    // publisher
-    // year
-    // place
-    // synthesis
-    // library
-    // section
-    // isDigital
-    // inventory
-    // url
-    // number
-    // classification
-    // physicalDescription
-    // cover
+    $sqlCode = "INSERT INTO `item`(`isbn`, `title`, `subtitle`, `edition`, `publisher`, `year`, `section`, `synthesis`, `place`, `inventory`, `library`, `physicalDescription`, `classification`, `isDigital`, `url`, `number`, `cover`, `collectionID`) VALUES ('$isbn','$title','$subtitle','$edition','$publisher','$year','$section','$synthesis','$place','$inventory','$library','$physicalDescription','$classification','$isDigital','$url','$number','$cover',$collection)";
 
-    // TAG-ITEM
+    $mysqli->query($sqlCode) or die("Falha na execução do código SQL: " . $mysqli);
+    $sql_query = $mysqli->query("SELECT LAST_INSERT_ID()") or die("Falha na execução do código SQL: " . $mysqli);
+    $createdItem = $sql_query->fetch_assoc();
+    $createdItem = $createdItem["LAST_INSERT_ID()"];
+
+
+    // Handle n:n Relationships
+    $entityType = "";
+    function createTagIfNotExists($entity)
+    {
+        include('../db/connection.php');
+        global $entityType;
+
+        $entity = ucwords(trim($entity));
+        $entityID = $entityType . "ID";
+
+        $sqlCode = "SELECT `$entityID` from $entityType WHERE name='$entity'";
+        $sql_query = $mysqli->query($sqlCode) or die("Falha na execução do código SQL: " . $mysqli);
+        $rows = $sql_query->num_rows;
+
+        if ($rows == 1) {
+            $entity = $sql_query->fetch_assoc();
+            return $entity[$entityID];
+        } else {
+            $sqlCode = "INSERT INTO $entityType (`name`) VALUES ('$entity')";
+            $mysqli->query($sqlCode) or die("Falha na execução do código SQL: " . $mysqli);
+
+            $sql_query = $mysqli->query("SELECT LAST_INSERT_ID()") or die("Falha na execução do código SQL: " . $mysqli);
+            $entity = $sql_query->fetch_assoc();
+
+            return $entity["LAST_INSERT_ID()"];
+        }
+    }
+
+    function relateItemEntity($entity, $item)
+    {
+        include('../db/connection.php');
+        global $entityType;
+
+        $tableName = "Item" . ucfirst($entityType);
+        $entityColumn = $entityType . "ID";
+
+        $sqlCode = "INSERT INTO `$tableName` (itemID, $entityColumn) VALUES ($item, $entity)";
+        $mysqli->query($sqlCode) or die("Falha na execução do código SQL: " . $mysqli);
+    }
+
+    // Handle Tags
+    $entityType = "tag";
+    $tags = explode(",", $tags);
+    $tags = array_map('createTagIfNotExists', $tags);
+    $tags = array_unique($tags);
+    foreach ($tags as $tag) {
+        relateItemEntity($tag, $createdItem);
+    }
+
+    // Handle Authors
+    $entityType = "author";
+    $authors = explode(",", $authors);
+    $authors = array_map('createTagIfNotExists', $authors);
+    $authors = array_unique($authors);
+    foreach ($authors as $author) {
+        relateItemEntity($author, $createdItem);
+    }
+
+    // Handle Translators
+    $entityType = "translator";
+    $translators = explode(",", $translators);
+    $translators = array_map('createTagIfNotExists', $translators);
+    $translators = array_unique($translators);
+    foreach ($translators as $translator) {
+        relateItemEntity($translator, $createdItem);
+    }
+
+    header("Location: ./");
 }
 ?>
 
@@ -146,6 +177,20 @@ if (isset($_POST['submit'])) {
                             <input type="text" name="subtitle" id="subtitle" class="outline-0 bg-transparent text-base text-slate-500 w-full pl-1" placeholder="Autobiografia não autorizada">
                         </div>
                     </div>
+
+                    <div class="flex flex-col gap-1 mb-4">
+                        <label for="authors" class="text-base text-slate-500 font-medium cursor-pointer">Autores <small>Separados por vírgula</small></label>
+                        <div class="flex gap-2 border rounded-lg border-1 border-slate-300 p-1 input-container-effect relative">
+                            <input type="text" name="authors" id="authors" class="outline-0 bg-transparent text-base text-slate-500 w-full pl-1" placeholder="Machado de Assis" required>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col gap-1 mb-4">
+                        <label for="translators" class="text-base text-slate-500 font-medium cursor-pointer">Tradutores <small>Separados por vírgula</small></label>
+                        <div class="flex gap-2 border rounded-lg border-1 border-slate-300 p-1 input-container-effect relative">
+                            <input type="text" name="translators" id="translators" class="outline-0 bg-transparent text-base text-slate-500 w-full pl-1" placeholder="Tatiana Belinky" required>
+                        </div>
+                    </div>
                     <div class="flex flex-col gap-1 mb-4">
                         <label for="collection" class="text-base text-slate-500 font-medium cursor-pointer">Tipo de Acervo</label>
                         <div class="flex gap-2 border rounded-lg border-1 border-slate-300 p-1 input-container-effect relative">
@@ -174,6 +219,12 @@ if (isset($_POST['submit'])) {
                         <label for="publisher" class="text-base text-slate-500 font-medium cursor-pointer">Editora</label>
                         <div class="flex gap-2 border rounded-lg border-1 border-slate-300 p-1 input-container-effect relative">
                             <input type="text" name="publisher" id="publisher" class="outline-0 bg-transparent text-base text-slate-500 w-full pl-1" placeholder="Intrínseca" required>
+                        </div>
+                    </div>
+                    <div class="flex flex-col gap-1 mb-4">
+                        <label for="edition" class="text-base text-slate-500 font-medium cursor-pointer">Edição</label>
+                        <div class="flex gap-2 border rounded-lg border-1 border-slate-300 p-1 input-container-effect relative">
+                            <input type="number" name="edition" id="edition" min="0" class="outline-0 bg-transparent text-base text-slate-500 w-full pl-1" placeholder="4" required>
                         </div>
                     </div>
                     <div class="flex flex-col gap-1 mb-4">

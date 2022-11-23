@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS Item (
     classification VARCHAR(250),
     url VARCHAR(500),
     number VARCHAR(100),
-cover VARCHAR(250),
+    cover VARCHAR(250),
 
     PRIMARY KEY(itemID),
     FOREIGN KEY (collectionID) REFERENCES Collection(collectionID)
@@ -86,7 +86,7 @@ CREATE TABLE IF NOT EXISTS ItemTranslator (
 
 CREATE TABLE IF NOT EXISTS Tag (
     tagID INT NOT NULL AUTO_INCREMENT,
-    value varchar(100),
+    name varchar(100),
 
     PRIMARY KEY(tagID)
 );
@@ -123,7 +123,7 @@ CREATE TABLE IF NOT EXISTS Evaluation (
     FOREIGN KEY (itemID) REFERENCES Item(itemID)
 );
 
-CREATE TABLE IF NOT EXISTS itemPerson (
+CREATE TABLE IF NOT EXISTS ItemPerson (
     personID INT NOT NULL,
     itemID INT NOT NULL,
 

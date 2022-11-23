@@ -10,8 +10,8 @@ if (isset($_POST['submit'])) {
         $remember_me = $mysqli->real_escape_string($_POST['remember-me']);
     }
 
-    $sql_code = "SELECT * FROM person WHERE email='$email'";
-    $sql_query = $mysqli->query($sql_code) or die("Falha na execução do código SQL: " . $mysqli);
+    $sqlCode = "SELECT * FROM person WHERE email='$email'";
+    $sql_query = $mysqli->query($sqlCode) or die("Falha na execução do código SQL: " . $mysqli);
     $rows = $sql_query->num_rows;
     global $rows;
 
