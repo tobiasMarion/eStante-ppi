@@ -1,7 +1,17 @@
 <?php
 include('../db/connection.php');
+    $component_prefix_path = '../';
+    global $component_prefix_path;
 
-$component_prefix_path = '../';
+    if (!isset($_SESSION)) {
+        session_start();
+    }
+
+    if (!isset($_SESSION['id'])) {
+        if (!$_SESSION['permission'] == 'Administrador') {
+            header('Location: ../auth/');
+        }
+    }
 
 if (isset($_POST['submit'])) {
     $title = $mysqli->real_escape_string($_POST['title']);
@@ -35,7 +45,7 @@ if (isset($_POST['submit'])) {
         $permanent_name = uniqid() . "." . $ext;
         $store_at = getcwd() . '/../db/uploads/covers/' . $permanent_name;
         move_uploaded_file($temp_name, $store_at);
-        $cover = './db/' . $permanent_name;
+        $cover = './db/uploads/covers/' . $permanent_name;
         return $cover;
     }
 

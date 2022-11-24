@@ -4,7 +4,8 @@
 [x] Modelagem do Banco
 [x] Sessões
 [x] Dividir páginas em componentes
-[ ] Preencher páginas com dados de usuário
-[ ] CRUD Acervo
-[ ] CRUD Items
-[ ] Página de Moderação
+[x] Preencher páginas com dados de usuário
+[x] CREATE Acervo
+[x] CREATE Itens
+[ ] READ Itens
+[ ] Página de Moderação 
