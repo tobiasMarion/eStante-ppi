@@ -2,8 +2,7 @@
 if (!isset($component_prefix_path)) {
     $component_prefix_path = '';
     global $component_prefix_path;
-}
-?>
+}?>
 
 <header class="p-3 bg-white border border-b-1 border-slate-100 drop-shadow-sm">
     <div class="flex w-full justify-between max-w-7xl mx-auto items-center gap-8  md:gap-16 px-2">

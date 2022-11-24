@@ -1,8 +1,9 @@
 <?php
+    $component_prefix_path = '../';
+    global $component_prefix_path;
+    
     include('../auth/protect.php');
     include('../components/head.php');
-
-    $component_prefix_path = '../';
 ?>
 
 <body>

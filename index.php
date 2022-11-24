@@ -27,7 +27,7 @@ include('./components/head.php');
 
             <section id="collection" class="my-16">
                 <h2 class="font-semibold text-slate-700 text-2xl mb-4">Recém-chegados na eStante</h2>
-                <div class="swiper mySwiper px-16 h-min">
+                <div class="swiper mySwiper px-12 h-min">
                     <div class="swiper-wrapper pb-16">
                         <?php
                         include('./db/connection.php');
@@ -41,26 +41,26 @@ include('./components/head.php');
                             $title = $item["title"];
                             $authors = [];
                             
-                            $sqlCode = "SELECT authorID FROM itemAuthor WHERE itemID=$id";
-                            $sql_query = $mysqli->query($sqlCode) or die("Falha na execução do código SQL: " . $mysqli);
+                            $sqlCode = "SELECT * FROM itemAuthor WHERE itemID=$id";
+                            $sql_query_authors = $mysqli->query($sqlCode) or die("Falha na execução do código SQL: " . $mysqli);
 
-                            while ($itemAuthor = $sql_query->fetch_assoc()) {
+                            while ($itemAuthor = $sql_query_authors->fetch_assoc()) {
                                 $auhtorID = $itemAuthor["authorID"];
 
                                 $sqlCode = "SELECT name FROM author WHERE authorID=$auhtorID";
-                                $sql_query = $mysqli->query($sqlCode) or die("Falha na execução do código SQL: " . $mysqli);
-                                $authorName = $sql_query->fetch_assoc();
+                                $sql_query_authors_name = $mysqli->query($sqlCode) or die("Falha na execução do código SQL: " . $mysqli);
+                                $authorName = $sql_query_authors_name->fetch_assoc();
                                 array_push($authors, $authorName["name"]);
                             }
 
                             $authors = implode(", ", $authors);
 
                             $itemArticle = "
-                                    <article class=\"swiper-slide rounded-lg overflow-hidden border drop-shadow-sm\">
+                                    <article class=\"swiper-slide rounded-lg overflow-hidden border drop-shadow\">
                                         <img src=\"$cover\" alt=\"Capa: Livro tal\" class=\"object-cover w-full h-48\">
-                                        <h3 class=\"text-base text-slate-700 mx-2 mt-4\">$title</h3>
-                                        <p class=\"text-sm font-light text-slate-600 mx-2 mb-4\">$authors</p>
-                                        <a href=\"./item/?item=$id\" class=\"flex items-center justify-center gap-2 hover:gap-3 py-2 text-emerald-600 border-t\">
+                                        <h3 class=\"text-base text-slate-700 mx-2 mt-4 font-medium\">$title</h3>
+                                        <p class=\"text-sm text-slate-600 mx-2 mb-4\">$authors</p>
+                                        <a href=\"./item/?item=$id\" class=\"flex items-center justify-center gap-2 hover:gap-3 hover:bg-emerald-100 font-medium py-2 bg-emerald-50 text-emerald-600 border-t\">
                                             Visitar obra 
                                             <img src=\"./static/assets/icons/arrow-right.svg\" alt=\"Visitar\">
                                         </a>
@@ -80,7 +80,7 @@ include('./components/head.php');
             <section class="my-16">
                 <h2 class="font-semibold text-slate-700 text-2xl mb-4">Sua Lista de Leitura</h2>
 
-                <div class="swiper mySwiper px-16 h-min">
+                <div class="swiper mySwiper px-12 h-min">
                     <div class="swiper-wrapper pb-16">
                         <article class="swiper-slide rounded-lg overflow-hidden border drop-shadow-sm   ">
                             <img src="./static/assets/bookCoverFiller.png" alt="Capa: Livro tal" class="object-cover w-full h-48">
