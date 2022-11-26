@@ -1,15 +1,35 @@
 <?php
-    $component_prefix_path = '../';
-    global $component_prefix_path;
-    
-    include('../auth/protect.php');
-    include('../components/head.php');
+$component_prefix_path = '../';
+global $component_prefix_path;
+
+include('../auth/protect.php');
+include('../components/head.php');
+include('../db/connection.php');
+
+$id = $mysqli->real_escape_string($_GET['item']);
+
+$sqlCode = "SELECT * FROM item WHERE itemID=$id";
+$sql_query = $mysqli->query($sqlCode) or die("Falha na execução do código SQL: " . $mysqli);
+$item = $sql_query->fetch_assoc();
+
+$sqlCode = "SELECT * FROM itemTag WHERE itemID=$id";
+$sql_query_tagID = $mysqli->query($sqlCode) or die("Falha na execução do código SQL: " . $mysqli);
+$item["tags"] = $sql_query_tagID->fetch_assoc();
+
+$sqlCode = "SELECT * FROM itemAuthor WHERE itemID=$id";
+$sql_query_authorID = $mysqli->query($sqlCode) or die("Falha na execução do código SQL: " . $mysqli);
+$item["authors"] = $sql_query_authorID->fetch_assoc();
+
+
+
+
+global $item;
 ?>
 
 <body>
     <div class="bg-slate-50 flex flex-col min-h-screen">
         <?php
-            include '../components/header.php';
+        include '../components/header.php';
         ?>
 
         <main class="w-full max-w-7xl mx-auto flex-grow my-8 md:my-16 px-2 flex flex-col gap-2">
@@ -21,7 +41,7 @@
                         <li class="py-1 px-2 bg-emerald-100 rounded"><a href="">Romance</a></li>
                         <li class="py-1 px-2 bg-emerald-100 rounded"><a href="">Ficção</a></li>
                     </ul>
-                    <h1 class="text-3xl font-bold text-slate-800 mb-1">Memórias Póstumas de Brás Cubas</h1>
+                    <h1 class="text-3xl font-bold text-slate-800 mb-1"><?= $item["title"] ?></h1>
                     <strong class="font-semibold text-xl text-slate-600"><a href="">Machado de Assis</a></strong>
                     <ul class="grid grid-cols-2 gap-1 justify-between my-4 text-slate-500">
                         <li>455 Avaliações:
@@ -91,7 +111,7 @@
         </main>
 
         <?php
-            include('../components/footer.php');
+        include('../components/footer.php');
         ?>
     </div>
 
