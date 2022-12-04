@@ -154,7 +154,7 @@ if (isset($_POST['submit'])) {
         relateItemEntity($translator, $createdItem);
     }
 
-    header("Location: ./");
+    header("Location: ./?item=$createdItem");
 }
 ?>
 

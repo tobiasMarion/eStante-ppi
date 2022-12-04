@@ -6,24 +6,30 @@ include('../auth/protect.php');
 include('../components/head.php');
 include('../db/connection.php');
 
-// $id = $mysqli->real_escape_string($_GET['item']);
+$id = $mysqli->real_escape_string($_GET['item']);
 
-// $sqlCode = "SELECT * FROM item WHERE itemID=$id";
-// $sql_query = $mysqli->query($sqlCode) or die("Falha na execução do código SQL: " . $mysqli);
-// $item = $sql_query->fetch_assoc();
+$sqlCode = "SELECT * FROM item WHERE itemID=$id";
+$sql_query = $mysqli->query($sqlCode) or die("Falha na execução do código SQL: " . $mysqli);
+$item = $sql_query->fetch_assoc();
 
-// $sqlCode = "SELECT * FROM itemTag WHERE itemID=$id";
-// $sql_query_tagID = $mysqli->query($sqlCode) or die("Falha na execução do código SQL: " . $mysqli);
-// $item["tags"] = $sql_query_tagID->fetch_assoc();
+$sqlCode = "SELECT * FROM tag INNER JOIN itemtag ON itemTag.tagID=tag.tagID WHERE itemtag.itemID=$id;";
+$sql_query_tag = $mysqli->query($sqlCode) or die("Falha na execução do código SQL: " . $mysqli);
+$item["tags"] = $sql_query_tag;
 
-// $sqlCode = "SELECT * FROM itemAuthor WHERE itemID=$id";
-// $sql_query_authorID = $mysqli->query($sqlCode) or die("Falha na execução do código SQL: " . $mysqli);
-// $item["authors"] = $sql_query_authorID->fetch_assoc();
+$sqlCode = "SELECT * FROM author INNER JOIN itemAuthor ON itemAuthor.authorID=author.authorID WHERE itemAuthor.itemID=$id";
+$sql_query_author = $mysqli->query($sqlCode) or die("Falha na execução do código SQL: " . $mysqli);
+$item["authors"] = $sql_query_author;
+
+$sqlCode = "SELECT * FROM comment WHERE itemID=$id";
+$sql_query_comment = $mysqli->query($sqlCode) or die("Falha na execução do código SQL: " . $mysqli);
+$item["comments"] = $sql_query_comment;
+
+$sqlCode = "SELECT * FROM evaluation WHERE itemID=$id";
+$sql_query_evaluation = $mysqli->query($sqlCode) or die("Falha na execução do código SQL: " . $mysqli);
+$item["evaluation"] = $sql_query_evaluation;
 
 
-
-
-// global $item;
+global $item;
 ?>
 
 <body>
@@ -34,17 +40,38 @@ include('../db/connection.php');
 
         <main class="w-full max-w-7xl mx-auto flex-grow my-8 md:my-16 px-2 flex flex-col gap-2">
             <section class="md:flex gap-12 mb-12">
-                <img src="../static/assets/bookCoverFiller.png" alt="Capa do Livro" class="w-full rounded-lg mx-auto mb-4 md:w-6/12 max-h-screen">
+                <img src="<?= $component_prefix_path . $item["cover"] ?>" alt="Capa do Livro" class="w-full rounded-lg mx-auto mb-4 md:w-6/12 max-h-screen">
                 <div class="md:flex-1 my-auto">
                     <ul class="flex gap-2 text-xs text-emerald-700 mb-4">
-                        <li class="py-1 px-2 bg-emerald-100 rounded"><a href="">Literatura Brasileira</a></li>
-                        <li class="py-1 px-2 bg-emerald-100 rounded"><a href="">Romance</a></li>
-                        <li class="py-1 px-2 bg-emerald-100 rounded"><a href="">Ficção</a></li>
+                        <?php
+                        while ($tag = $item["tags"]->fetch_assoc()) {
+                            $name = $tag["name"];
+                            $link = "<li class=\"py-1 px-2 bg-emerald-100 rounded\"><a href=\"\">$name</a></li>";
+                            echo ($link);
+                        }
+                        ?>
                     </ul>
                     <h1 class="text-3xl font-bold text-slate-800 mb-1"><?= $item["title"] ?></h1>
-                    <strong class="font-semibold text-xl text-slate-600"><a href="">Machado de Assis</a></strong>
+                    <?php
+                    $subtitle = $item["subtitle"];
+                    if ($subtitle) {
+                        echo ("<strong class=\"block font-medium text-md text-slate-500 mb-4\">$subtitle</strong>");
+                    }
+
+                    $authors = [];
+                    while ($author = $item["authors"]->fetch_assoc()) {
+                        $name = $author["name"];
+                        $link = "<a href=\"\">$name</a>";
+                        array_push($authors, $link);
+                    }
+
+                    $authors = implode(", ", $authors);
+
+                    echo ("<strong class=\"block font-semibold text-xl text-slate-600\">$authors</strong>");
+                    ?>
+
                     <ul class="grid grid-cols-2 gap-1 justify-between my-4 text-slate-500">
-                        <li>455 Avaliações:
+                        <li class="flex items-center gap-2"><?= $item["evaluation"]->num_rows?> Avaliações:
                             <span>
                                 <button><img src="../static/assets/icons/filled-star.svg" alt="Estrla"></button>
                                 <button><img src="../static/assets/icons/filled-star.svg" alt="Estrla"></button>
@@ -53,28 +80,29 @@ include('../db/connection.php');
                                 <button><img src="../static/assets/icons/filled-star.svg" alt="Estrla"></button>
                             </span>
                         </li>
-                        <li class="justify-self-end">50 Comentários</li>
-                        <li>8º Edição</li>
-                        <li class="justify-self-end">Editora Intrinseca</li>
-                        <li>6 Exemplares</li>
+                        <li class="justify-self-end"><?= $item["comments"]->num_rows?> Comentários</li>
+                        <li><?= $item["edition"] ?>ª Edição</li>
+                        <li class="justify-self-end">Editora <?= $item["publisher"] ?></li>
+                        <?php
+                        if (!$item["isDigital"]) {
+                            $inventory = $item["inventory"];
+                            echo ("<li>$inventory</li>");
+                        }
+                        ?>
                     </ul>
                     <div class="flex gap-4 my-8">
                         <button class="flex-1 py-2 rounded bg-emerald-500 hover:bg-emerald-500 text-slate-50 font-medium">Adicionar
                             a Sua Lista</button>
-                        <a class="flex-1 py-2 rounded border-2 border-emerald-500 text-center font-medium text-emerald-600 hover:border-emerald-600 hover:text-emerald-700" href="">Deixe o seu Comentário</a>
+                        <a class="flex-1 py-2 rounded border-2 border-emerald-500 text-center font-medium text-emerald-600 hover:border-emerald-600 hover:text-emerald-700" href="#comments">Deixe o seu Comentário</a>
                     </div>
                     <div>
                         <h2 class="text-lg font-medium text-slate-600">Síntese</h2>
-                        <p class="text-slate-500">Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore, enim,
-                            sequi accusamus beatae
-                            incidunt reprehenderit ab vero, minima deleniti sunt accusantium similique inventore? Aut,
-                            nihil facilis pariatur, sed quos totam dolor libero ad error quidem voluptas commodi quaerat
-                            dolorum amet ducimus beatae atque nobis! Alias culpa aspernatur sequi ratione beatae.</p>
+                        <p class="text-slate-500"><?= $item["synthesis"] ?></p>
                     </div>
                 </div>
             </section>
 
-            <section>
+            <section id="comments">
                 <h2 class="font-semibold text-xl text-slate-600">Deixe o seu Comentário</h2>
 
                 <form class="flex flex-col my-8 items-end gap-2">
