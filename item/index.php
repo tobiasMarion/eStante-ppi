@@ -6,24 +6,24 @@ include('../auth/protect.php');
 include('../components/head.php');
 include('../db/connection.php');
 
-$id = $mysqli->real_escape_string($_GET['item']);
+// $id = $mysqli->real_escape_string($_GET['item']);
 
-$sqlCode = "SELECT * FROM item WHERE itemID=$id";
-$sql_query = $mysqli->query($sqlCode) or die("Falha na execução do código SQL: " . $mysqli);
-$item = $sql_query->fetch_assoc();
+// $sqlCode = "SELECT * FROM item WHERE itemID=$id";
+// $sql_query = $mysqli->query($sqlCode) or die("Falha na execução do código SQL: " . $mysqli);
+// $item = $sql_query->fetch_assoc();
 
-$sqlCode = "SELECT * FROM itemTag WHERE itemID=$id";
-$sql_query_tagID = $mysqli->query($sqlCode) or die("Falha na execução do código SQL: " . $mysqli);
-$item["tags"] = $sql_query_tagID->fetch_assoc();
+// $sqlCode = "SELECT * FROM itemTag WHERE itemID=$id";
+// $sql_query_tagID = $mysqli->query($sqlCode) or die("Falha na execução do código SQL: " . $mysqli);
+// $item["tags"] = $sql_query_tagID->fetch_assoc();
 
-$sqlCode = "SELECT * FROM itemAuthor WHERE itemID=$id";
-$sql_query_authorID = $mysqli->query($sqlCode) or die("Falha na execução do código SQL: " . $mysqli);
-$item["authors"] = $sql_query_authorID->fetch_assoc();
-
-
+// $sqlCode = "SELECT * FROM itemAuthor WHERE itemID=$id";
+// $sql_query_authorID = $mysqli->query($sqlCode) or die("Falha na execução do código SQL: " . $mysqli);
+// $item["authors"] = $sql_query_authorID->fetch_assoc();
 
 
-global $item;
+
+
+// global $item;
 ?>
 
 <body>

@@ -41,16 +41,11 @@ include('./components/head.php');
                             $title = $item["title"];
                             $authors = [];
                             
-                            $sqlCode = "SELECT * FROM itemAuthor WHERE itemID=$id";
+                            $sqlCode = "SELECT author.name FROM itemauthor INNER JOIN author ON itemauthor.authorID=author.authorID WHERE itemauthor.itemID=$id;";
                             $sql_query_authors = $mysqli->query($sqlCode) or die("Falha na execução do código SQL: " . $mysqli);
 
-                            while ($itemAuthor = $sql_query_authors->fetch_assoc()) {
-                                $auhtorID = $itemAuthor["authorID"];
-
-                                $sqlCode = "SELECT name FROM author WHERE authorID=$auhtorID";
-                                $sql_query_authors_name = $mysqli->query($sqlCode) or die("Falha na execução do código SQL: " . $mysqli);
-                                $authorName = $sql_query_authors_name->fetch_assoc();
-                                array_push($authors, $authorName["name"]);
+                            while ($author = $sql_query_authors->fetch_assoc()) {
+                                array_push($authors, $author["name"]);
                             }
 
                             $authors = implode(", ", $authors);
