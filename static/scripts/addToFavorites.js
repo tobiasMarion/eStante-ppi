@@ -14,5 +14,9 @@ favoriteButtons.forEach(button => button.addEventListener("click", () => {
 
     ajax(item, person)
 
-    button.innerHTML = "Remover dos Favoritos"
+    if (button.innerHTML == "Remover dos Favoritos") {
+        button.innerHTML = "Adicionar aos Favoritos"
+    } else {
+        button.innerHTML = "Remover dos Favoritos"
+    }
 }))

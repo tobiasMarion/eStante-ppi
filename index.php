@@ -72,73 +72,30 @@ include('./components/head.php');
                 </div>
             </section>
 
-            <section class="my-16">
-                <h2 class="font-semibold text-slate-700 text-2xl mb-4">Sua Lista de Leitura</h2>
+                <?php 
+                    $sql_code = "SELECT * FROM itemperson WHERE itemID=$itemID AND personID=$personID";
+                    $sql_query_select = $mysqli->query($sql_code) or die("Falha na execução do código SQL: " . $mysqli);
+                    $rows = $sql_query_select->num_rows;
 
-                <div class="swiper mySwiper px-12 h-min">
-                    <div class="swiper-wrapper pb-16">
-                        <article class="swiper-slide rounded-lg overflow-hidden border drop-shadow-sm   ">
-                            <img src="./static/assets/bookCoverFiller.png" alt="Capa: Livro tal" class="object-cover w-full h-48">
-                            <h3 class="text-base text-slate-700 mx-2 mt-4">Memórias Póstumas de Brás Cubas</h3>
-                            <p class="text-sm font-light text-slate-600 mx-2 mb-4">Machado de Assis</p>
-                            <a href="#" class="flex items-center justify-center gap-2 hover:gap-3 py-2 text-emerald-600 border-t">Visitar
-                                obra <img src="./static/assets/icons/arrow-right.svg" alt="Visitar"></a>
-                        </article>
-                        <article class="swiper-slide rounded-lg overflow-hidden border drop-shadow-sm   ">
-                            <img src="./static/assets/bookCoverFiller.png" alt="Capa: Livro tal" class="object-cover w-full h-48">
-                            <h3 class="text-base text-slate-700 mx-2 mt-4">Memórias Póstumas de Brás Cubas</h3>
-                            <p class="text-sm font-light text-slate-600 mx-2 mb-4">Machado de Assis</p>
-                            <a href="#" class="flex items-center justify-center gap-2 hover:gap-3 py-2 text-emerald-600 border-t">Visitar
-                                obra <img src="./static/assets/icons/arrow-right.svg" alt="Visitar"></a>
-                        </article>
-                        <article class="swiper-slide rounded-lg overflow-hidden border drop-shadow-sm   ">
-                            <img src="./static/assets/bookCoverFiller.png" alt="Capa: Livro tal" class="object-cover w-full h-48">
-                            <h3 class="text-base text-slate-700 mx-2 mt-4">Memórias Póstumas de Brás Cubas</h3>
-                            <p class="text-sm font-light text-slate-600 mx-2 mb-4">Machado de Assis</p>
-                            <a href="#" class="flex items-center justify-center gap-2 hover:gap-3 py-2 text-emerald-600 border-t">Visitar
-                                obra <img src="./static/assets/icons/arrow-right.svg" alt="Visitar"></a>
-                        </article>
-                        <article class="swiper-slide rounded-lg overflow-hidden border drop-shadow-sm   ">
-                            <img src="./static/assets/bookCoverFiller.png" alt="Capa: Livro tal" class="object-cover w-full h-48">
-                            <h3 class="text-base text-slate-700 mx-2 mt-4">Memórias Póstumas de Brás Cubas</h3>
-                            <p class="text-sm font-light text-slate-600 mx-2 mb-4">Machado de Assis</p>
-                            <a href="#" class="flex items-center justify-center gap-2 hover:gap-3 py-2 text-emerald-600 border-t">Visitar
-                                obra <img src="./static/assets/icons/arrow-right.svg" alt="Visitar"></a>
-                        </article>
-                        <article class="swiper-slide rounded-lg overflow-hidden border drop-shadow-sm   ">
-                            <img src="./static/assets/bookCoverFiller.png" alt="Capa: Livro tal" class="object-cover w-full h-48">
-                            <h3 class="text-base text-slate-700 mx-2 mt-4">Memórias Póstumas de Brás Cubas</h3>
-                            <p class="text-sm font-light text-slate-600 mx-2 mb-4">Machado de Assis</p>
-                            <a href="#" class="flex items-center justify-center gap-2 hover:gap-3 py-2 text-emerald-600 border-t">Visitar
-                                obra <img src="./static/assets/icons/arrow-right.svg" alt="Visitar"></a>
-                        </article>
-                        <article class="swiper-slide rounded-lg overflow-hidden border drop-shadow-sm   ">
-                            <img src="./static/assets/bookCoverFiller.png" alt="Capa: Livro tal" class="object-cover w-full h-48">
-                            <h3 class="text-base text-slate-700 mx-2 mt-4">Memórias Póstumas de Brás Cubas</h3>
-                            <p class="text-sm font-light text-slate-600 mx-2 mb-4">Machado de Assis</p>
-                            <a href="#" class="flex items-center justify-center gap-2 hover:gap-3 py-2 text-emerald-600 border-t">Visitar
-                                obra <img src="./static/assets/icons/arrow-right.svg" alt="Visitar"></a>
-                        </article>
-                        <article class="swiper-slide rounded-lg overflow-hidden border drop-shadow-sm   ">
-                            <img src="./static/assets/bookCoverFiller.png" alt="Capa: Livro tal" class="object-cover w-full h-48">
-                            <h3 class="text-base text-slate-700 mx-2 mt-4">Memórias Póstumas de Brás Cubas</h3>
-                            <p class="text-sm font-light text-slate-600 mx-2 mb-4">Machado de Assis</p>
-                            <a href="#" class="flex items-center justify-center gap-2 hover:gap-3 py-2 text-emerald-600 border-t">Visitar
-                                obra <img src="./static/assets/icons/arrow-right.svg" alt="Visitar"></a>
-                        </article>
-                        <article class="swiper-slide rounded-lg overflow-hidden border drop-shadow-sm   ">
-                            <img src="./static/assets/bookCoverFiller.png" alt="Capa: Livro tal" class="object-cover w-full h-48">
-                            <h3 class="text-base text-slate-700 mx-2 mt-4">Memórias Póstumas de Brás Cubas</h3>
-                            <p class="text-sm font-light text-slate-600 mx-2 mb-4">Machado de Assis</p>
-                            <a href="#" class="flex items-center justify-center gap-2 hover:gap-3 py-2 text-emerald-600 border-t">Visitar
-                                obra <img src="./static/assets/icons/arrow-right.svg" alt="Visitar"></a>
-                        </article>
-                    </div>
-                    <div class="swiper-button-next"></div>
-                    <div class="swiper-button-prev"></div>
-                    <div class="swiper-pagination"></div>
-                </div>
-            </section>
+                    if ($rows > 0) {
+                        echo("
+                            <section class=\"my-16\">
+                                <h2 class=\"font-semibold text-slate-700 text-2xl mb-4\">Sua Lista de Leitura</h2>
+                                <div class=\"swiper mySwiper px-12 h-min\">
+                                    <div class=\"swiper-wrapper pb-16\">
+                        ");
+
+
+                        echo("
+                                </div>
+                                    <div class=\"swiper-button-next\"></div>
+                                    <div class=\"swiper-button-prev\"></div>
+                                    <div class=\"swiper-pagination\"></div>
+                                </div>
+                            </section>
+                        ");
+                    }
+                ?>                    
         </main>
 
         <?php
