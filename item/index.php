@@ -8,25 +8,30 @@ include('../db/connection.php');
 
 $id = $mysqli->real_escape_string($_GET['item']);
 
-$sqlCode = "SELECT * FROM item WHERE itemID=$id";
-$sql_query = $mysqli->query($sqlCode) or die("Falha na execução do código SQL: " . $mysqli);
+$sql_code = "SELECT * FROM item WHERE itemID=$id";
+$sql_query = $mysqli->query($sql_code) or die("Falha na execução do código SQL: " . $mysqli);
 $item = $sql_query->fetch_assoc();
 
-$sqlCode = "SELECT * FROM tag INNER JOIN itemtag ON itemTag.tagID=tag.tagID WHERE itemtag.itemID=$id;";
-$sql_query_tag = $mysqli->query($sqlCode) or die("Falha na execução do código SQL: " . $mysqli);
+$sql_code = "SELECT * FROM tag INNER JOIN itemtag ON itemTag.tagID=tag.tagID WHERE itemtag.itemID=$id;";
+$sql_query_tag = $mysqli->query($sql_code) or die("Falha na execução do código SQL: " . $mysqli);
 $item["tags"] = $sql_query_tag;
 
-$sqlCode = "SELECT * FROM author INNER JOIN itemAuthor ON itemAuthor.authorID=author.authorID WHERE itemAuthor.itemID=$id";
-$sql_query_author = $mysqli->query($sqlCode) or die("Falha na execução do código SQL: " . $mysqli);
+$sql_code = "SELECT * FROM author INNER JOIN itemAuthor ON itemAuthor.authorID=author.authorID WHERE itemAuthor.itemID=$id";
+$sql_query_author = $mysqli->query($sql_code) or die("Falha na execução do código SQL: " . $mysqli);
 $item["authors"] = $sql_query_author;
 
-$sqlCode = "SELECT * FROM comment WHERE itemID=$id";
-$sql_query_comment = $mysqli->query($sqlCode) or die("Falha na execução do código SQL: " . $mysqli);
+$sql_code = "SELECT * FROM comment WHERE itemID=$id";
+$sql_query_comment = $mysqli->query($sql_code) or die("Falha na execução do código SQL: " . $mysqli);
 $item["comments"] = $sql_query_comment;
 
-$sqlCode = "SELECT * FROM evaluation WHERE itemID=$id";
-$sql_query_evaluation = $mysqli->query($sqlCode) or die("Falha na execução do código SQL: " . $mysqli);
-$item["evaluation"] = $sql_query_evaluation;
+$sql_code = "SELECT COUNT(value), AVG(value) FROM evaluation WHERE itemID=$id";
+$sql_query_evaluation = $mysqli->query($sql_code) or die("Falha na execução do código SQL: " . $mysqli);
+$item["evaluation"] = $sql_query_evaluation->fetch_assoc();
+
+$personID = $_SESSION["id"];
+$sql_code = "SELECT * FROM itemperson WHERE itemID=$id AND personID=$personID;";
+$sql_query_favorites = $mysqli->query($sql_code) or die("Falha na execução do código SQL: " . $mysqli);
+$item["isFavorite"] = $sql_query_favorites->num_rows == 1 ? true : false;
 
 
 global $item;
@@ -71,16 +76,20 @@ global $item;
                     ?>
 
                     <ul class="grid grid-cols-2 gap-1 justify-between my-4 text-slate-500">
-                        <li class="flex items-center gap-2"><?= $item["evaluation"]->num_rows?> Avaliações:
-                            <span>
-                                <button><img src="../static/assets/icons/filled-star.svg" alt="Estrla"></button>
-                                <button><img src="../static/assets/icons/filled-star.svg" alt="Estrla"></button>
-                                <button><img src="../static/assets/icons/filled-star.svg" alt="Estrla"></button>
-                                <button><img src="../static/assets/icons/filled-star.svg" alt="Estrla"></button>
-                                <button><img src="../static/assets/icons/filled-star.svg" alt="Estrla"></button>
-                            </span>
+                        <li class="flex items-center gap-2"><?= $item["evaluation"]["COUNT(value)"] ?> Avaliações:
+                            <form action="#" id="evaluation">
+                                <?php
+                                for ($star = 1; $star < 6; $star++) {
+                                    $src = $star <= $item["evaluation"]["AVG(value)"] ? "filled" : "unfilled";
+                                    echo ("<button><img src=\"../static/assets/icons/$src-star.svg\" alt=\"Estrela\" data-value=\"$star\"></button>");
+                                }
+                                ?>
+
+                                <input type="hidden" name="person" value="<?= $_SESSION['id'] ?>">
+                                <input type="hidden" name="item" value="<?= $id ?>">
+                            </form>
                         </li>
-                        <li class="justify-self-end"><?= $item["comments"]->num_rows?> Comentários</li>
+                        <li class="justify-self-end"><?= $item["comments"]->num_rows ?> Comentários</li>
                         <li><?= $item["edition"] ?>ª Edição</li>
                         <li class="justify-self-end">Editora <?= $item["publisher"] ?></li>
                         <?php
@@ -90,18 +99,40 @@ global $item;
                         }
                         ?>
                     </ul>
-                    <div class="flex gap-4 my-8">
-                        <button class="flex-1 py-2 rounded bg-emerald-500 hover:bg-emerald-500 text-slate-50 font-medium">Adicionar
-                            a Sua Lista</button>
-                        <a class="flex-1 py-2 rounded border-2 border-emerald-500 text-center font-medium text-emerald-600 hover:border-emerald-600 hover:text-emerald-700" href="#comments">Deixe o seu Comentário</a>
-                    </div>
+
+                    <?php
+                    $buttons = "";
+
+                    if ($item['isDigital']) {
+                        $url = $item["url"];
+                        $text = $item["isFavorite"] ? "Remover dos Favoritos" : "Adicionar aos Favoritos";
+                        $buttons = "<div class=\"flex gap-4 my-8\">
+                            <a 
+                                class=\"flex-1 py-2 rounded bg-emerald-500 hover:bg-emerald-500 text-slate-50 font-medium text-center\" target=\"_blank\" href=\"$url\">
+                                Leia agora
+                            </a>
+                            <button class=\"add-to-favorites flex-1 py-2 rounded border-2 border-emerald-500 text-center font-medium text-emerald-600 hover:border-emerald-600 hover:text-emerald-700\">$text</button>
+                        </div>";
+                    } else {
+                        $buttons = "
+                        <div class=\"flex gap-4 my-8\">
+                        <button class=\"flex-1 py-2 rounded bg-emerald-500 hover:bg-emerald-500 text-slate-50 font-medium add-to-favorites\">
+                            $text
+                        </button>
+                            <a class=\"flex-1 py-2 rounded border-2 border-emerald-500 text-center font-medium text-emerald-600 hover:border-emerald-600 hover:text-emerald-700\" href=\"#comments\">
+                            Deixe o seu Comentário
+                        </a>
+                    </div>";
+                    }
+
+                    echo ($buttons);
+                    ?>
                     <div>
                         <h2 class="text-lg font-medium text-slate-600">Síntese</h2>
                         <p class="text-slate-500"><?= $item["synthesis"] ?></p>
                     </div>
                 </div>
             </section>
-
             <section id="comments">
                 <h2 class="font-semibold text-xl text-slate-600">Deixe o seu Comentário</h2>
 
@@ -143,7 +174,9 @@ global $item;
         ?>
     </div>
 
-    <script src="./static/scripts/inputEffect.js"></script>
+    <script src="<?= $component_prefix_path ?>./static/scripts/inputEffect.js"></script>
+    <script src="<?= $component_prefix_path ?>./static/scripts/evaluationHandler.js"></script>
+    <script src="<?= $component_prefix_path ?>./static/scripts/addToFavorites.js"></script>
 </body>
 
 </html>

@@ -57,9 +57,9 @@ if (isset($_POST['submit'])) {
         $newCollection = $mysqli->real_escape_string($_POST['newCollection']);
         $cdu = $mysqli->real_escape_string($_POST['cdu']);
 
-        $sqlCode = "INSERT INTO `collection` (`name`, `cdu`) VALUES ('$newCollection', '$cdu')";
+        $sql_code = "INSERT INTO `collection` (`name`, `cdu`) VALUES ('$newCollection', '$cdu')";
 
-        $mysqli->query($sqlCode) or die("Falha na execução do código SQL: " . $mysqli);
+        $mysqli->query($sql_code) or die("Falha na execução do código SQL: " . $mysqli);
         $sql_query = $mysqli->query("SELECT LAST_INSERT_ID()") or die("Falha na execução do código SQL: " . $mysqli);
         $collection = $sql_query->fetch_assoc();
         $collection = $collection["LAST_INSERT_ID()"];
@@ -79,9 +79,9 @@ if (isset($_POST['submit'])) {
 
 
     // Create Item
-    $sqlCode = "INSERT INTO `item`(`isbn`, `title`, `subtitle`, `edition`, `publisher`, `year`, `section`, `synthesis`, `place`, `inventory`, `library`, `physicalDescription`, `classification`, `isDigital`, `url`, `number`, `cover`, `collectionID`) VALUES ('$isbn','$title','$subtitle','$edition','$publisher','$year','$section','$synthesis','$place','$inventory','$library','$physicalDescription','$classification','$isDigital','$url','$number','$cover',$collection)";
+    $sql_code = "INSERT INTO `item`(`isbn`, `title`, `subtitle`, `edition`, `publisher`, `year`, `section`, `synthesis`, `place`, `inventory`, `library`, `physicalDescription`, `classification`, `isDigital`, `url`, `number`, `cover`, `collectionID`) VALUES ('$isbn','$title','$subtitle','$edition','$publisher','$year','$section','$synthesis','$place','$inventory','$library','$physicalDescription','$classification','$isDigital','$url','$number','$cover',$collection)";
 
-    $mysqli->query($sqlCode) or die("Falha na execução do código SQL: " . $mysqli);
+    $mysqli->query($sql_code) or die("Falha na execução do código SQL: " . $mysqli);
     $sql_query = $mysqli->query("SELECT LAST_INSERT_ID()") or die("Falha na execução do código SQL: " . $mysqli);
     $createdItem = $sql_query->fetch_assoc();
     $createdItem = $createdItem["LAST_INSERT_ID()"];
@@ -97,16 +97,16 @@ if (isset($_POST['submit'])) {
         $entity = ucwords(trim($entity));
         $entityID = $entityType . "ID";
 
-        $sqlCode = "SELECT `$entityID` from $entityType WHERE name='$entity'";
-        $sql_query = $mysqli->query($sqlCode) or die("Falha na execução do código SQL: " . $mysqli);
+        $sql_code = "SELECT `$entityID` from $entityType WHERE name='$entity'";
+        $sql_query = $mysqli->query($sql_code) or die("Falha na execução do código SQL: " . $mysqli);
         $rows = $sql_query->num_rows;
 
         if ($rows == 1) {
             $entity = $sql_query->fetch_assoc();
             return $entity[$entityID];
         } else {
-            $sqlCode = "INSERT INTO $entityType (`name`) VALUES ('$entity')";
-            $mysqli->query($sqlCode) or die("Falha na execução do código SQL: " . $mysqli);
+            $sql_code = "INSERT INTO $entityType (`name`) VALUES ('$entity')";
+            $mysqli->query($sql_code) or die("Falha na execução do código SQL: " . $mysqli);
 
             $sql_query = $mysqli->query("SELECT LAST_INSERT_ID()") or die("Falha na execução do código SQL: " . $mysqli);
             $entity = $sql_query->fetch_assoc();
@@ -123,8 +123,8 @@ if (isset($_POST['submit'])) {
         $tableName = "Item" . ucfirst($entityType);
         $entityColumn = $entityType . "ID";
 
-        $sqlCode = "INSERT INTO `$tableName` (itemID, $entityColumn) VALUES ($item, $entity)";
-        $mysqli->query($sqlCode) or die("Falha na execução do código SQL: " . $mysqli);
+        $sql_code = "INSERT INTO `$tableName` (itemID, $entityColumn) VALUES ($item, $entity)";
+        $mysqli->query($sql_code) or die("Falha na execução do código SQL: " . $mysqli);
     }
 
     // Handle Tags

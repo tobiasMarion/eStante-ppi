@@ -32,8 +32,8 @@ include('./components/head.php');
                         <?php
                         include('./db/connection.php');
 
-                        $sqlCode = "SELECT * FROM item ORDER BY itemID DESC LIMIT 18";
-                        $sql_query = $mysqli->query($sqlCode) or die("Falha na execução do código SQL: " . $mysqli);
+                        $sql_code = "SELECT * FROM item ORDER BY itemID DESC LIMIT 18";
+                        $sql_query = $mysqli->query($sql_code) or die("Falha na execução do código SQL: " . $mysqli);
 
                         while ($item = $sql_query->fetch_assoc()) {
                             $id = $item["itemID"];
@@ -41,8 +41,8 @@ include('./components/head.php');
                             $title = $item["title"];
                             $authors = [];
                             
-                            $sqlCode = "SELECT author.name FROM itemauthor INNER JOIN author ON itemauthor.authorID=author.authorID WHERE itemauthor.itemID=$id;";
-                            $sql_query_authors = $mysqli->query($sqlCode) or die("Falha na execução do código SQL: " . $mysqli);
+                            $sql_code = "SELECT author.name FROM itemauthor INNER JOIN author ON itemauthor.authorID=author.authorID WHERE itemauthor.itemID=$id;";
+                            $sql_query_authors = $mysqli->query($sql_code) or die("Falha na execução do código SQL: " . $mysqli);
 
                             while ($author = $sql_query_authors->fetch_assoc()) {
                                 array_push($authors, $author["name"]);

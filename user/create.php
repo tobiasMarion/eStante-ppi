@@ -16,8 +16,8 @@ if (isset($_POST['submit'])) {
     $regular = $mysqli->real_escape_string($_POST['regular']);
     $avatar = null;
 
-    $sqlCode = "SELECT * FROM person WHERE email='$email'";
-    $sql_query = $mysqli->query($sqlCode) or die("Falha na execução do código SQL: " . $mysqli);
+    $sql_code = "SELECT * FROM person WHERE email='$email'";
+    $sql_query = $mysqli->query($sql_code) or die("Falha na execução do código SQL: " . $mysqli);
     $rows = $sql_query->num_rows;
 
     global $rows;
@@ -40,9 +40,9 @@ if (isset($_POST['submit'])) {
 
         $password = password_hash($password, PASSWORD_DEFAULT);
 
-        $sqlCode = "INSERT INTO `person` (`name`, `registration`, `cpf`, `email`, `password`, `type`, `course`, `campus`, `regular`, `avatar`) VALUES ('$name', '$registration', '$cpf', '$email', '$password', '$type', '$course', '$campus', '$regular', '$avatar')";
+        $sql_code = "INSERT INTO `person` (`name`, `registration`, `cpf`, `email`, `password`, `type`, `course`, `campus`, `regular`, `avatar`) VALUES ('$name', '$registration', '$cpf', '$email', '$password', '$type', '$course', '$campus', '$regular', '$avatar')";
 
-        $sql_query = $mysqli->query($sqlCode) or die("Falha na execução do código SQL: " . $mysqli);
+        $sql_query = $mysqli->query($sql_code) or die("Falha na execução do código SQL: " . $mysqli);
         header("Location: ../auth/logout.php");
     }
 }
