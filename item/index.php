@@ -95,7 +95,7 @@ global $item;
                         <?php
                         if (!$item["isDigital"]) {
                             $inventory = $item["inventory"];
-                            echo ("<li>$inventory</li>");
+                            echo ("<li>$inventory Unidades Disponíveis</li>");
                         }
                         ?>
                     </ul>
@@ -103,9 +103,10 @@ global $item;
                     <?php
                     $buttons = "";
 
+                    $text = $item["isFavorite"] ? "Remover dos Favoritos" : "Adicionar aos Favoritos";
+
                     if ($item['isDigital']) {
                         $url = $item["url"];
-                        $text = $item["isFavorite"] ? "Remover dos Favoritos" : "Adicionar aos Favoritos";
                         $buttons = "<div class=\"flex gap-4 my-8\">
                             <a 
                                 class=\"flex-1 py-2 rounded bg-emerald-500 hover:bg-emerald-500 text-slate-50 font-medium text-center\" target=\"_blank\" href=\"$url\">
@@ -134,15 +135,23 @@ global $item;
                 </div>
             </section>
             <section id="comments">
-                <h2 class="font-semibold text-xl text-slate-600">Deixe o seu Comentário</h2>
+                <h2 class="font-semibold text-xl text-slate-600 mb-2">Deixe o seu Comentário</h2>
+                <p class="text-slate-500 mb-4 text-sm flex items-center gap-2">
+                    <img src=" ../static/assets/icons/warning.svg" alt="Atenção" class="w-4">
+                    Antes de serem exibidos, todos os comentários passam por uma revisão dos moderadores da <i>eStante</i>.
+                </p>
+                
+
 
                 <form class="flex flex-col my-8 items-end gap-2">
                     <article class="p-4 bg-white border rounded-lg w-full">
                         <header class="flex gap-2 mb-2">
-                            <img src=" ../static/assets/profileFiller.png" alt="Fulano">
+                            <img 
+                            src="<?= str_starts_with($_SESSION['avatar'], 'https://') ? $_SESSION['avatar'] : $component_prefix_path . $_SESSION['avatar'] ?>" 
+                            alt="Avatar"
+                            class="w-12 h-auto rounded-full border border-2 border-emerald-500 object-cover">
                             <div class="hidden md:flex flex-col justify-center items-start w-fit">
-                                <span class="text-slate-600 text-sm md:text-base font-medium block">Fulano de
-                                    tal</span>
+                                <span class="text-slate-600 text-sm md:text-base font-medium block"><?=$_SESSION["name"]?></span>
                                 <span class="block text-xs md:text-sm text-slate-500">Aluno</span>
                             </div>
                         </header>
@@ -151,16 +160,15 @@ global $item;
                     </article>
 
                     <button class="w-min px-4 py-2 bg-emerald-500 rounded-lg font-medium text-slate-50">Comentar</button> <!-- Responder Fulano-->
-                </form>
+                </form> 
 
                 <div>
                     <article class="p-4 bg-white border rounded-lg">
                         <header class="flex gap-2 mb-2">
                             <img src=" ../static/assets/profileFiller.png" alt="Fulano">
                             <div class="hidden md:flex flex-col justify-center items-start w-fit">
-                                <span class="text-slate-700 text-sm md:text-base block leading-none">Fulano de
-                                    tal</span>
-                                <span class="block text-xs font-light text-slate-500 leading-none">Aluno</span>
+                                <span class="text-slate-700 text-sm md:text-base block leading-none">b</span>
+                                <span class="block text-xs font-light text-slate-500 leading-none">a</span>
                             </div>
                         </header>
                         <p class="w-full h-8 p-1 h-min text-slate-600">Lorem ipsum dolor sit amet consectetur adipisicing elit. Unde exercitationem dicta perferendis? Omnis, facere enim doloremque quibusdam velit natus repellendus sit, aperiam consequuntur sunt tenetur libero impedit? Error, in non.</p>

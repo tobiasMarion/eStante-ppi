@@ -1,10 +1,10 @@
 # eStante 📚 | To do list
 
-[ ] Página do Item
+[x] Página do Item
 [ ] Página de moderação
-[ ] Pesquisa de livros
+[x] Pesquisa de livros
 [ ] Pesquisa de usuários
-[ ] Refatorar o Banco de Dados
-[ ] Painel de Controle
+[x] Refatorar o Banco de Dados
 [ ] Comentários
-[ ] Avaliações
+[x] Avaliações
+[ ] Interação

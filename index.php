@@ -40,7 +40,7 @@ include('./components/head.php');
                             $cover = $item["cover"];
                             $title = $item["title"];
                             $authors = [];
-                            
+
                             $sql_code = "SELECT author.name FROM itemauthor INNER JOIN author ON itemauthor.authorID=author.authorID WHERE itemauthor.itemID=$id;";
                             $sql_query_authors = $mysqli->query($sql_code) or die("Falha na execução do código SQL: " . $mysqli);
 
@@ -64,7 +64,7 @@ include('./components/head.php');
 
                             echo ($itemArticle);
                         }
-                        ?>  
+                        ?>
                     </div>
                     <div class="swiper-button-next"></div>
                     <div class="swiper-button-prev"></div>
@@ -72,30 +72,61 @@ include('./components/head.php');
                 </div>
             </section>
 
-                <?php 
-                    $sql_code = "SELECT * FROM itemperson WHERE itemID=$itemID AND personID=$personID";
-                    $sql_query_select = $mysqli->query($sql_code) or die("Falha na execução do código SQL: " . $mysqli);
-                    $rows = $sql_query_select->num_rows;
+            <?php
+            $personID = $_SESSION["id"];
+            $sql_code = "SELECT * FROM itemperson INNER JOIN item ON item.itemID=itemperson.itemID WHERE personID=$personID";
+            $sql_query_select = $mysqli->query($sql_code) or die("Falha na execução do código SQL: " . $mysqli);
+            $rows = $sql_query_select->num_rows;
 
-                    if ($rows > 0) {
-                        echo("
-                            <section class=\"my-16\">
-                                <h2 class=\"font-semibold text-slate-700 text-2xl mb-4\">Sua Lista de Leitura</h2>
-                                <div class=\"swiper mySwiper px-12 h-min\">
-                                    <div class=\"swiper-wrapper pb-16\">
-                        ");
+            if ($rows > 0) {
+                echo ("
+                    <section class=\"my-16\">
+                        <h2 class=\"font-semibold text-slate-700 text-2xl mb-4\">Sua Lista de Leitura</h2>
+                        <div class=\"swiper mySwiper px-12 h-min\">
+                            <div class=\"swiper-wrapper pb-16\">
+                ");
 
+                while ($item = $sql_query_select->fetch_assoc()) {
+                    $id = $item["itemID"];
+                    $cover = $item["cover"];
+                    $title = $item["title"];
+                    $authors = [];
 
-                        echo("
-                                </div>
-                                    <div class=\"swiper-button-next\"></div>
-                                    <div class=\"swiper-button-prev\"></div>
-                                    <div class=\"swiper-pagination\"></div>
-                                </div>
-                            </section>
-                        ");
+                    $sql_code = "SELECT author.name FROM itemauthor INNER JOIN author ON itemauthor.authorID=author.authorID WHERE itemauthor.itemID=$id;";
+                    $sql_query_authors = $mysqli->query($sql_code) or die("Falha na execução do código SQL: " . $mysqli);
+
+                    while ($author = $sql_query_authors->fetch_assoc()) {
+                        array_push($authors, $author["name"]);
                     }
-                ?>                    
+
+                    $authors = implode(", ", $authors);
+
+                    $itemArticle = "
+                            <article class=\"swiper-slide rounded-lg overflow-hidden border drop-shadow\">
+                                <img src=\"$cover\" alt=\"Capa: Livro tal\" class=\"object-cover w-full h-48\">
+                                <h3 class=\"text-base text-slate-700 mx-2 mt-4 font-medium\">$title</h3>
+                                <p class=\"text-sm text-slate-600 mx-2 mb-4\">$authors</p>
+                                <a href=\"./item/?item=$id\" class=\"flex items-center justify-center gap-2 hover:gap-3 hover:bg-emerald-100 font-medium py-2 bg-emerald-50 text-emerald-600 border-t\">
+                                    Visitar obra 
+                                    <img src=\"./static/assets/icons/arrow-right.svg\" alt=\"Visitar\">
+                                </a>
+                            </article>
+                        ";
+
+                    echo ($itemArticle);
+                }
+
+
+                echo ("
+                            </div>
+                            <div class=\"swiper-button-next\"></div>
+                            <div class=\"swiper-button-prev\"></div>
+                            <div class=\"swiper-pagination\"></div>
+                        </div>
+                    </section>
+                ");
+            }
+            ?>
         </main>
 
         <?php

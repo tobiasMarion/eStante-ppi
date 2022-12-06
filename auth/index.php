@@ -33,6 +33,7 @@ if (isset($_POST['submit'])) {
             $_SESSION['id'] = $user['personID'];
             $_SESSION['name'] = $user['name'];
             $_SESSION['avatar'] = $user['avatar'];
+            $_SESSION['type'] = $user['type'] == "student" ? "Aluno" : "Servidor";
 
             switch ($user['permissionLevel']) {
                 case 'admin':
