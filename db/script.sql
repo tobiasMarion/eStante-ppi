@@ -106,6 +106,7 @@ CREATE TABLE IF NOT EXISTS Comment (
     itemID INT NOT NULL,
     content VARCHAR(2000),
     replyTo INT,
+    approved BOOLEAN,
 
     PRIMARY KEY(commentID),
     FOREIGN KEY (personID) REFERENCES Person(personID),

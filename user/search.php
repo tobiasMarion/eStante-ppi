@@ -1,8 +1,8 @@
 <?php
+    $component_prefix_path = '../'; 
     include('../auth/protect.php');
     include('../components/head.php');
 
-    $component_prefix_path = '../';
 ?>
 
 <body>
@@ -55,7 +55,7 @@
     </div>
 
 
-    <script src="./static/scripts/inputEffect.js"></script>
+    <script src="<?= $component_prefix_path . "./static/scripts/inputEffect.js"?>"></script>
     
 </body>
 

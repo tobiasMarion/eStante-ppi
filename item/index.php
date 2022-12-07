@@ -143,7 +143,7 @@ global $item;
                 
 
 
-                <form class="flex flex-col my-8 items-end gap-2">
+                <form class="flex flex-col my-8 items-end gap-2 send-comment" method="POST" action="./send_messages.php">
                     <article class="p-4 bg-white border rounded-lg w-full">
                         <header class="flex gap-2 mb-2">
                             <img 
@@ -156,10 +156,12 @@ global $item;
                             </div>
                         </header>
                         <textarea name="comment" class="w-full h-8 p-1 text-slate-600" placeholder="O que você achou dessa obra?"></textarea>
-                        <input type="number" class="hidden" name="replay-to">
                     </article>
 
-                    <button class="w-min px-4 py-2 bg-emerald-500 rounded-lg font-medium text-slate-50">Comentar</button> <!-- Responder Fulano-->
+                    <input type="hidden" name="item-id" value="<?=$item["itemID"]?>">
+                    <input type="hidden" name="reply-to" value="">
+                    <input type="hidden" name="person" value="<?=$_SESSION["id"]?>">
+                    <button class="w-min px-4 py-2 bg-emerald-500 rounded-lg font-medium text-slate-50">Comentar</button>
                 </form> 
 
                 <div>
@@ -185,6 +187,7 @@ global $item;
     <script src="<?= $component_prefix_path ?>./static/scripts/inputEffect.js"></script>
     <script src="<?= $component_prefix_path ?>./static/scripts/evaluationHandler.js"></script>
     <script src="<?= $component_prefix_path ?>./static/scripts/addToFavorites.js"></script>
+    <script src="<?= $component_prefix_path ?>./static/scripts/comment.js"></script>
 </body>
 
 </html>

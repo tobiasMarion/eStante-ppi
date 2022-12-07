@@ -15,7 +15,7 @@ if (!isset($component_prefix_path)) {
         </a>
 
 
-        <form class="flex flex-col gap-2 flex-grow max-w-2xl" method="GET" action="<?=$component_prefix_path . './search.php'?>">
+        <form class="flex flex-col gap-2 flex-grow max-w-2xl search-form" method="GET" action="<?= $component_prefix_path . './search.php' ?>">
             <div class="flex gap-2 border rounded-lg border-1 border-slate-300 py-1 px-2 input-container-effect relative ">
                 <label for="search" class="block"><img src="<?= $component_prefix_path ?>./static/assets/icons/search.svg" alt="Usuário" class="h-6 my-auto "></label>
                 <input type="text" name="search" id="search" class="outline-0 bg-transparent text-slate-500 w-full border-x-2 border-slate-200 mr-1 pr-1 px-1 text-sm md:text-base" placeholder="Pesquisar...">
@@ -23,6 +23,11 @@ if (!isset($component_prefix_path)) {
                     <option value="title" selected>Título</option>
                     <option value="author">Autor</option>
                     <option value="tag">Tags</option>
+                    <?php
+                    if ($_SESSION['permission'] == "Administrador") {
+                        echo ("<option value=\"person\">Usuários</option>");
+                    }
+                    ?>
                 </select>
             </div>
         </form>
@@ -51,4 +56,6 @@ if (!isset($component_prefix_path)) {
             </ul> -->
         </div>
     </div>
+
+    <script src="<?=$component_prefix_path?>./static/scripts/changeFormToPerson.js"></script>
 </header>
