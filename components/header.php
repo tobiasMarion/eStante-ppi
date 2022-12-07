@@ -4,7 +4,7 @@ if (!isset($component_prefix_path)) {
     global $component_prefix_path;
 } ?>
 
-<header class="p-3 bg-white border border-b-1 border-slate-100 drop-shadow-sm">
+<header class="p-3 bg-white border border-b-1 border-slate-100 drop-shadow-sm relative z-10">
     <div class="flex w-full justify-between max-w-7xl mx-auto items-center gap-8  md:gap-16 px-2">
         <a href="<?= $component_prefix_path ?>./">
             <picture>
@@ -32,7 +32,7 @@ if (!isset($component_prefix_path)) {
             </div>
         </form>
 
-        <div class="flex items-center gap-2 relative profile ">
+        <div class="flex items-center gap-2 relative profile z-10">
             <div class="hidden md:flex flex-col justify-center items-end w-fit">
                 <span class="text-slate-700 text-sm md:text-base block leading-none"><?= $_SESSION['name'] ?></span>
                 <span class="block text-xs font-light text-slate-500 leading-none"><?= $_SESSION['permission'] ?></span>
@@ -46,7 +46,7 @@ if (!isset($component_prefix_path)) {
                 }
 
                 if ($_SESSION['permission'] == 'Administrador') {
-                    echo ("<li ><a href=\"$component_prefix_path./auth/admin.php\" class=\"flex items-center gap-2 text-slate-500\"><img src=\"$component_prefix_path./static/assets/icons/admin.svg\" alt=\"Painel de Controle\" class=\"w-4\"> Painel de Controle</a></li>");
+                    echo ("<li ><a href=\"$component_prefix_path./admin.php\" class=\"flex items-center gap-2 text-slate-500\"><img src=\"$component_prefix_path./static/assets/icons/admin.svg\" alt=\"Painel de Controle\" class=\"w-4\"> Painel de Controle</a></li>");
                 }
 
                 ?>

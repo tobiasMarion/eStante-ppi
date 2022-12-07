@@ -63,18 +63,17 @@ input[disabled] {
 }
 
 .profile ul {
-    display: none;
     width: max-content;
+    flex-direction: column;
+    display: none;
 }
 
 .profile:hover ul {
     display: flex;
-    flex-direction: column;
 }
 
 .profile ul li {
-    padding: 0 .5rem;
-    margin: 4px 0;
+    padding: .5rem .5rem;
 }
 
 .profile ul li + li{

@@ -5,7 +5,8 @@
 [x] Pesquisa de livros
 [x] Pesquisa de usuários
 [x] Refatorar o Banco de Dados
-[ ] Comentários
+[x] Comentários
 [x] Avaliações
 [x] Interação
+[x] Painel de Controle
 [ ] AJAX de promoção de usuário
