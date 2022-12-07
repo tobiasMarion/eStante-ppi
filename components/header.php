@@ -32,14 +32,14 @@ if (!isset($component_prefix_path)) {
             </div>
         </form>
 
-        <div class="flex items-center gap-2 relative">
+        <div class="flex items-center gap-2 relative profile ">
             <div class="hidden md:flex flex-col justify-center items-end w-fit">
                 <span class="text-slate-700 text-sm md:text-base block leading-none"><?= $_SESSION['name'] ?></span>
                 <span class="block text-xs font-light text-slate-500 leading-none"><?= $_SESSION['permission'] ?></span>
             </div>
             <img src="<?= str_starts_with($_SESSION['avatar'], 'https://') ? $_SESSION['avatar'] : $component_prefix_path . $_SESSION['avatar'] ?>" alt="Foto de perfil" class="w-12 h-auto rounded-full border border-2 border-emerald-500 object-cover">
 
-            <!-- <ul>
+            <ul class="absolute flex w-max right-0 bg-white border-b-1 border-slate-100 drop-shadow-sm rounded-lg top-full text-sm py-1">
                 <?php
                 if (in_array($_SESSION['permission'], ['Administrador', 'Moderador'])) {
                     echo ("<li ><a href=\"\" class=\"flex items-center gap-2 text-slate-500\"><img src=\"$component_prefix_path./static/assets/icons/slate-comment.svg\" alt=\"Comentários Pendentes\" class=\"w-4\"> Comentários Pendentes</a></li>");
@@ -53,7 +53,7 @@ if (!isset($component_prefix_path)) {
                 <li><a href="<?= $component_prefix_path ?>./auth/logout.php" class="flex items-center gap-2 text-slate-500"><img src="<?= $component_prefix_path ?>./static/assets/icons/log-out.svg" alt="Sair" class="w-4"> Sair</a></li>
 
 
-            </ul> -->
+            </ul>
         </div>
     </div>
 

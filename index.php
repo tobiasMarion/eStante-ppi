@@ -13,8 +13,8 @@ include('./components/head.php');
         include './components/header.php';
         ?>
 
-        <main class="w-full max-w-7xl mx-auto flex-grow my-8 md:my-16 px-2">
-            <section class="flex flex-col p-8 rounded-lg bg-emerald-500 drop-shadow-sm">
+        <main class="w-full max-w-7xl mx-auto flex-grow my-12 md:my-20 px-2">
+            <section class="flex flex-col p-8 rounded-lg bg-emerald-500 drop-shadow-sm relative">
                 <strong class="block font-semibold text-3xl	md:text-4xl max-w-2xl text-slate-50 mb-6">Qual obra você vai
                     retirar da eStante hoje?</strong>
                 <p class="block text-sm md:text-base text text-slate-200 max-w-2xl mb-2">Se os escritores escrevesse tão

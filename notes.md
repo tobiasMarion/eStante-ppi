@@ -3,8 +3,9 @@
 [x] Página do Item
 [ ] Página de moderação
 [x] Pesquisa de livros
-[ ] Pesquisa de usuários
+[x] Pesquisa de usuários
 [x] Refatorar o Banco de Dados
 [ ] Comentários
 [x] Avaliações
-[ ] Interação
+[x] Interação
+[ ] AJAX de promoção de usuário

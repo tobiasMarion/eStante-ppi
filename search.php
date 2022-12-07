@@ -85,7 +85,7 @@ global $display_text;
 
                         $tr = "
                             <tr class=\"text-center py-2 border-b h-16\">
-                                <td class=\"text-left mr-2\"><img src=\"$cover\" alt=\"Capa\" class=\"w-12 object-cover rounded\"></td>
+                                <td class=\"text-left mr-2\"><img src=\"$cover\" alt=\"Capa\" class=\"w-12 h-12 object-cover rounded\"></td>
                                 <td class=\"text-left font-semibold text-slate-600 text-xs md:text-sm px-4 table-cell\"><a href=\"./item/?item=$id\">$title</a></td>
                                 <td class=\"text-left text-slate-500 text-xs md:text-sm\">$authors</td>
                                 <td class=\"hidden md:table-cell\">";

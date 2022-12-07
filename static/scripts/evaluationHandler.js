@@ -1,5 +1,5 @@
 const starButtons = document.querySelectorAll('#evaluation button')
-const form = document.querySelector('#evaluation')
+const formStars = document.querySelector('#evaluation')
 
 function ajaxEvaluate(evaluation, item, person) {
     const xhr = new XMLHttpRequest()
@@ -14,7 +14,7 @@ function ajaxEvaluate(evaluation, item, person) {
     xhr.send(`person=${person}&item=${item}&evaluation=${evaluation}`);
 }
 
-form.addEventListener('submit', e => {
+formStars.addEventListener('submit', e => {
     e.preventDefault()
 })
 

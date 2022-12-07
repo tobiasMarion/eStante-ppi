@@ -51,7 +51,7 @@ global $item;
                         <?php
                         while ($tag = $item["tags"]->fetch_assoc()) {
                             $name = $tag["name"];
-                            $link = "<li class=\"py-1 px-2 bg-emerald-100 rounded\"><a href=\"\">$name</a></li>";
+                            $link = "<li class=\"py-1 px-2 bg-emerald-100 rounded\"><a href=\"../search.php?search=$name&search-for=tag\">$name</a></li>";
                             echo ($link);
                         }
                         ?>

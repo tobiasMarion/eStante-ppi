@@ -66,7 +66,7 @@ CREATE TABLE IF NOT EXISTS Translator (
     PRIMARY KEY(translatorID)
 );
 
-CREATE TABLE IF NOT EXISTS ItemAutor (
+CREATE TABLE IF NOT EXISTS ItemAuthor (
     authorID INT NOT NULL,
     itemID INT NOT NULL,
 

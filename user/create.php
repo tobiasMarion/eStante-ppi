@@ -100,7 +100,7 @@ if (isset($_POST['submit'])) {
                 <fieldset class="mb-8">
                     <legend class="text-2xl text-slate-600 font-semibold mb-4">Dados Acadêmicos/Profissionais</legend>
                     <div class="flex flex-col gap-1 mb-4">
-                        <label for="registration" class="text-base text-slate-500 font-medium cursor-pointer">Matrícula/CIAP</label>
+                        <label for="registration" class="text-base text-slate-500 font-medium cursor-pointer">Matrícula/SIAPE</label>
                         <div class="flex gap-2 border rounded-lg border-1 border-slate-300 p-1 input-container-effect relative">
                             <input type="text" name="registration" id="registration" class="outline-0 bg-transparent text-base text-slate-500 w-full pl-1" placeholder="2020300000" required>
                         </div>

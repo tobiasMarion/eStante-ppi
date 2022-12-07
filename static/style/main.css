@@ -57,3 +57,26 @@ option {
 input[disabled] {
     opacity: 0.5;
 }
+
+.profile {
+    cursor: pointer;
+}
+
+.profile ul {
+    display: none;
+    width: max-content;
+}
+
+.profile:hover ul {
+    display: flex;
+    flex-direction: column;
+}
+
+.profile ul li {
+    padding: 0 .5rem;
+    margin: 4px 0;
+}
+
+.profile ul li + li{
+    border-top: 1px solid #e2e8f0;
+}
