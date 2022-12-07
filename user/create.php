@@ -16,8 +16,8 @@ if (isset($_POST['submit'])) {
     $regular = $mysqli->real_escape_string($_POST['regular']);
     $avatar = null;
 
-    $sqlCode = "SELECT * FROM person WHERE email='$email'";
-    $sql_query = $mysqli->query($sqlCode) or die("Falha na execução do código SQL: " . $mysqli);
+    $sql_code = "SELECT * FROM person WHERE email='$email'";
+    $sql_query = $mysqli->query($sql_code) or die("Falha na execução do código SQL: " . $mysqli);
     $rows = $sql_query->num_rows;
 
     global $rows;
@@ -40,9 +40,9 @@ if (isset($_POST['submit'])) {
 
         $password = password_hash($password, PASSWORD_DEFAULT);
 
-        $sqlCode = "INSERT INTO `person` (`name`, `registration`, `cpf`, `email`, `password`, `type`, `course`, `campus`, `regular`, `avatar`) VALUES ('$name', '$registration', '$cpf', '$email', '$password', '$type', '$course', '$campus', '$regular', '$avatar')";
+        $sql_code = "INSERT INTO `person` (`name`, `registration`, `cpf`, `email`, `password`, `type`, `course`, `campus`, `regular`, `avatar`) VALUES ('$name', '$registration', '$cpf', '$email', '$password', '$type', '$course', '$campus', '$regular', '$avatar')";
 
-        $sql_query = $mysqli->query($sqlCode) or die("Falha na execução do código SQL: " . $mysqli);
+        $sql_query = $mysqli->query($sql_code) or die("Falha na execução do código SQL: " . $mysqli);
         header("Location: ../auth/logout.php");
     }
 }
@@ -100,7 +100,7 @@ if (isset($_POST['submit'])) {
                 <fieldset class="mb-8">
                     <legend class="text-2xl text-slate-600 font-semibold mb-4">Dados Acadêmicos/Profissionais</legend>
                     <div class="flex flex-col gap-1 mb-4">
-                        <label for="registration" class="text-base text-slate-500 font-medium cursor-pointer">Matrícula/CIAP</label>
+                        <label for="registration" class="text-base text-slate-500 font-medium cursor-pointer">Matrícula/SIAPE</label>
                         <div class="flex gap-2 border rounded-lg border-1 border-slate-300 p-1 input-container-effect relative">
                             <input type="text" name="registration" id="registration" class="outline-0 bg-transparent text-base text-slate-500 w-full pl-1" placeholder="2020300000" required>
                         </div>

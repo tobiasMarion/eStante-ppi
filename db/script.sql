@@ -66,7 +66,7 @@ CREATE TABLE IF NOT EXISTS Translator (
     PRIMARY KEY(translatorID)
 );
 
-CREATE TABLE IF NOT EXISTS ItemAutor (
+CREATE TABLE IF NOT EXISTS ItemAuthor (
     authorID INT NOT NULL,
     itemID INT NOT NULL,
 
@@ -106,6 +106,7 @@ CREATE TABLE IF NOT EXISTS Comment (
     itemID INT NOT NULL,
     content VARCHAR(2000),
     replyTo INT,
+    approved BOOLEAN,
 
     PRIMARY KEY(commentID),
     FOREIGN KEY (personID) REFERENCES Person(personID),

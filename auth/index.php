@@ -10,8 +10,8 @@ if (isset($_POST['submit'])) {
         $remember_me = $mysqli->real_escape_string($_POST['remember-me']);
     }
 
-    $sqlCode = "SELECT * FROM person WHERE email='$email'";
-    $sql_query = $mysqli->query($sqlCode) or die("Falha na execução do código SQL: " . $mysqli);
+    $sql_code = "SELECT * FROM person WHERE email='$email'";
+    $sql_query = $mysqli->query($sql_code) or die("Falha na execução do código SQL: " . $mysqli);
     $rows = $sql_query->num_rows;
     global $rows;
 
@@ -33,6 +33,7 @@ if (isset($_POST['submit'])) {
             $_SESSION['id'] = $user['personID'];
             $_SESSION['name'] = $user['name'];
             $_SESSION['avatar'] = $user['avatar'];
+            $_SESSION['type'] = $user['type'] == "student" ? "Aluno" : "Servidor";
 
             switch ($user['permissionLevel']) {
                 case 'admin':
