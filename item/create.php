@@ -1,17 +1,17 @@
 <?php
 include('../db/connection.php');
-    $component_prefix_path = '../';
-    global $component_prefix_path;
+$component_prefix_path = '../';
+global $component_prefix_path;
 
-    if (!isset($_SESSION)) {
-        session_start();
-    }
+if (!isset($_SESSION)) {
+    session_start();
+}
 
-    if (!isset($_SESSION['id'])) {
-        if (!$_SESSION['permission'] == 'Administrador') {
-            header('Location: ../auth/');
-        }
+if (!isset($_SESSION['id'])) {
+    if (!$_SESSION['permission'] == 'Administrador') {
+        header('Location: ../auth/');
     }
+}
 
 if (isset($_POST['submit'])) {
     $title = $mysqli->real_escape_string($_POST['title']);
@@ -79,12 +79,22 @@ if (isset($_POST['submit'])) {
 
 
     // Create Item
-    $sql_code = "INSERT INTO `item`(`isbn`, `title`, `subtitle`, `edition`, `publisher`, `year`, `section`, `synthesis`, `place`, `inventory`, `library`, `physicalDescription`, `classification`, `isDigital`, `url`, `number`, `cover`, `collectionID`) VALUES ('$isbn','$title','$subtitle','$edition','$publisher','$year','$section','$synthesis','$place','$inventory','$library','$physicalDescription','$classification','$isDigital','$url','$number','$cover',$collection)";
+    $createdItem = null;
 
-    $mysqli->query($sql_code) or die("Falha na execução do código SQL: " . $mysqli);
-    $sql_query = $mysqli->query("SELECT LAST_INSERT_ID()") or die("Falha na execução do código SQL: " . $mysqli);
-    $createdItem = $sql_query->fetch_assoc();
-    $createdItem = $createdItem["LAST_INSERT_ID()"];
+    if (isset($_GET['item'])) {
+        $itemID = $mysqli->real_escape_string($_GET['item']);
+
+        $sql_code = "UPDATE `item` SET `isbn`='$isbn', `title`='$title', `subtitle`='$subtitle', `edition`='$edition', `publisher`='$publisher', `year`='$year', `section`='$section', `synthesis`='$synthesis', `place`='$place', `inventory`='$inventory', `library`='$library', `physicalDescription`='$physicalDescription', `classification`='$classification', `isDigital`='$isDigital', `url`='$url', `number`='$number', `cover`='$cover', `collectionID`=$collection WHERE itemID=$itemID";
+        $mysqli->query($sql_code) or die("Falha na execução do código SQL: " . $mysqli);
+        $createdItem = $itemID;
+    } else {
+        $sql_code = "INSERT INTO `item`(`isbn`, `title`, `subtitle`, `edition`, `publisher`, `year`, `section`, `synthesis`, `place`, `inventory`, `library`, `physicalDescription`, `classification`, `isDigital`, `url`, `number`, `cover`, `collectionID`) VALUES ('$isbn','$title','$subtitle','$edition','$publisher','$year','$section','$synthesis','$place','$inventory','$library','$physicalDescription','$classification','$isDigital','$url','$number','$cover',$collection)";
+
+        $mysqli->query($sql_code) or die("Falha na execução do código SQL: " . $mysqli);
+        $sql_query = $mysqli->query("SELECT LAST_INSERT_ID()") or die("Falha na execução do código SQL: " . $mysqli);
+        $createdItem = $sql_query->fetch_assoc();
+        $createdItem = $createdItem["LAST_INSERT_ID()"];
+    }
 
 
     // Handle n:n Relationships
@@ -123,8 +133,14 @@ if (isset($_POST['submit'])) {
         $tableName = "Item" . ucfirst($entityType);
         $entityColumn = $entityType . "ID";
 
-        $sql_code = "INSERT INTO `$tableName` (itemID, $entityColumn) VALUES ($item, $entity)";
-        $mysqli->query($sql_code) or die("Falha na execução do código SQL: " . $mysqli);
+        $sql_code = "SELECT * FROM `$tableName` WHERE itemID=$item AND $entityColumn=$entity";
+        $sql_query_select = $mysqli->query($sql_code) or die("Falha na execução do código SQL: " . $mysqli);
+
+        if ($sql_query_select->num_rows < 1)  {
+            $sql_code = "INSERT INTO `$tableName` (itemID, $entityColumn) VALUES ($item, $entity)";
+            $mysqli->query($sql_code) or die("Falha na execução do código SQL: " . $mysqli);
+        }
+
     }
 
     // Handle Tags
@@ -156,6 +172,47 @@ if (isset($_POST['submit'])) {
 
     header("Location: ./?item=$createdItem");
 }
+
+if (isset($_GET['item']) && !isset($_POST['submit'])) {
+    $itemID = $mysqli->real_escape_string($_GET['item']);
+
+    $sql_code = "SELECT * FROM item WHERE itemID=$itemID";
+    $sql_query = $mysqli->query($sql_code) or die("Falha na execução do código SQL: " . $mysqli);
+    $item = $sql_query->fetch_assoc();
+
+    $sql_code = "SELECT * FROM tag INNER JOIN itemtag ON itemTag.tagID=tag.tagID WHERE itemtag.itemID=$itemID;";
+    $sql_query_tag = $mysqli->query($sql_code) or die("Falha na execução do código SQL: " . $mysqli);
+    $item["tags"] = $sql_query_tag;
+
+    $sql_code = "SELECT * FROM author INNER JOIN itemAuthor ON itemAuthor.authorID=author.authorID WHERE itemAuthor.itemID=$itemID";
+    $sql_query_author = $mysqli->query($sql_code) or die("Falha na execução do código SQL: " . $mysqli);
+    $item["authors"] = [];
+    while ($author = $sql_query_author->fetch_assoc()) {
+        $name = $author["name"];
+        array_push($item["authors"], $name);
+    }
+    $item["authors"] = implode(", ", $item["authors"]);
+
+    $sql_code = "SELECT * FROM translator INNER JOIN itemtranslator ON itemtranslator.translatorID=translator.translatorID WHERE itemtranslator.itemID=$itemID";
+    $sql_query_translator = $mysqli->query($sql_code) or die("Falha na execução do código SQL: " . $mysqli);
+    $item["translators"] = [];
+    while ($translator = $sql_query_translator->fetch_assoc()) {
+        $name = $translator["name"];
+        array_push($item["translators"], $name);
+    }
+    $item["translators"] = implode(", ", $item["translators"]);
+
+    $sql_code = "SELECT * FROM tag INNER JOIN itemtag ON itemtag.tagID=tag.tagID WHERE itemtag.itemID=$itemID";
+    $sql_query_tag = $mysqli->query($sql_code) or die("Falha na execução do código SQL: " . $mysqli);
+    $item["tags"] = [];
+    while ($tag = $sql_query_tag->fetch_assoc()) {
+        $name = $tag["name"];
+        array_push($item["tags"], $name);
+    }
+    $item["tags"] = implode(", ", $item["tags"]);
+
+    global $item;
+}
 ?>
 
 <?php include('../components/head.php'); ?>
@@ -172,42 +229,54 @@ if (isset($_POST['submit'])) {
         </header>
 
         <main class="w-full flex-grow mb-8 md:mb-16 px-2 flex-1">
-            <form action="" method="POST" enctype="multipart/form-data" class="max-w-3xl negative-margin border drop-shadow drop-shadow-sm rounded-lg bg-white w-full mx-auto p-8">
+            <form action="./create.php<?= isset($item) ? "?item=" . $item["itemID"] : "" ?>" method="POST" enctype="multipart/form-data" class="max-w-3xl negative-margin border drop-shadow drop-shadow-sm rounded-lg bg-white w-full mx-auto p-8">
                 <fieldset class="mb-8">
                     <legend class="text-2xl text-slate-600 font-semibold mb-4">Dados da obra</legend>
                     <div class="flex flex-col gap-1 mb-4">
                         <label for="title" class="text-base text-slate-500 font-medium cursor-pointer">Título</label>
                         <div class="flex gap-2 border rounded-lg border-1 border-slate-300 p-1 input-container-effect relative">
-                            <input type="text" name="title" id="title" class="outline-0 bg-transparent text-base text-slate-500 w-full pl-1" placeholder="Lemony Snicket" required>
+                            <input type="text" name="title" id="title" value="<?= isset($item) ? $item["title"] : "" ?>" class="outline-0 bg-transparent text-base text-slate-500 w-full pl-1" placeholder="Lemony Snicket" required>
                         </div>
                     </div>
                     <div class="flex flex-col gap-1 mb-4">
                         <label for="subtitle" class="text-base text-slate-500 font-medium cursor-pointer">Subtítulo <small>(Opcional)</small></label>
                         <div class="flex gap-2 border rounded-lg border-1 border-slate-300 p-1 input-container-effect relative">
-                            <input type="text" name="subtitle" id="subtitle" class="outline-0 bg-transparent text-base text-slate-500 w-full pl-1" placeholder="Autobiografia não autorizada">
+                            <input type="text" name="subtitle" value="<?= isset($item) ? $item["subtitle"] : "" ?>" id="subtitle" class="outline-0 bg-transparent text-base text-slate-500 w-full pl-1" placeholder="Autobiografia não autorizada">
                         </div>
                     </div>
 
                     <div class="flex flex-col gap-1 mb-4">
                         <label for="authors" class="text-base text-slate-500 font-medium cursor-pointer">Autores <small>Separados por vírgula</small></label>
                         <div class="flex gap-2 border rounded-lg border-1 border-slate-300 p-1 input-container-effect relative">
-                            <input type="text" name="authors" id="authors" class="outline-0 bg-transparent text-base text-slate-500 w-full pl-1" placeholder="Machado de Assis" required>
+                            <input type="text" name="authors" id="authors" value="<?= isset($item) ? $item["authors"] : "" ?>" class="outline-0 bg-transparent text-base text-slate-500 w-full pl-1" placeholder="Machado de Assis" required>
                         </div>
                     </div>
 
                     <div class="flex flex-col gap-1 mb-4">
                         <label for="translators" class="text-base text-slate-500 font-medium cursor-pointer">Tradutores <small>Separados por vírgula</small></label>
                         <div class="flex gap-2 border rounded-lg border-1 border-slate-300 p-1 input-container-effect relative">
-                            <input type="text" name="translators" id="translators" class="outline-0 bg-transparent text-base text-slate-500 w-full pl-1" placeholder="Tatiana Belinky" required>
+                            <input type="text" name="translators" value="<?= isset($item) ? $item["translators"] : "" ?>" id="translators" class="outline-0 bg-transparent text-base text-slate-500 w-full pl-1" placeholder="Tatiana Belinky" required>
                         </div>
                     </div>
                     <div class="flex flex-col gap-1 mb-4">
                         <label for="collection" class="text-base text-slate-500 font-medium cursor-pointer">Tipo de Acervo</label>
                         <div class="flex gap-2 border rounded-lg border-1 border-slate-300 p-1 input-container-effect relative">
                             <select class="w-full text-slate-500" name="collection" id="collection" required>
-                                <option value="4" selected>Livro</option>
-                                <option value="">Revista</option>
-                                <option value="">Artigo</option>
+                                <option selected disabled>Selecione um acervo</option>
+                                <?php
+                                $sql_code = "SELECT * FROM collection";
+                                $sql_query = $mysqli->query($sql_code) or die("Falha na execução do código SQL: " . $mysqli);
+
+                                while ($collection = $sql_query->fetch_assoc()) {
+                                    $id = $collection["collectionID"];
+                                    $name = $collection["name"];
+                                    $cdu = $collection["cdu"];
+
+                                    $isSelected = $id == $item["collectionID"] ? "selected" : "";
+
+                                    echo ("<option value=\"$id\" data-cdu=\"$cdu\" $isSelected>$name</option>");
+                                }
+                                ?>
                                 <option value="+">Cadastrar novo</option>
                             </select>
                             <button type="button" id="newCollectionButton"><img src="../static/assets/icons/add.svg" alt="Adicionar"></button>
@@ -222,45 +291,45 @@ if (isset($_POST['submit'])) {
                     <div class="flex flex-col gap-1 mb-4">
                         <label for="isbn" class="text-base text-slate-500 font-medium cursor-pointer">ISBN</label>
                         <div class="flex gap-2 border rounded-lg border-1 border-slate-300 p-1 input-container-effect relative">
-                            <input type="text" name="isbn" id="isbn" class="outline-0 bg-transparent text-base text-slate-500 w-full pl-1" placeholder="978-3-16-148410-0" required>
+                            <input type="text" name="isbn" value="<?= isset($item) ? $item["isbn"] : "" ?>" id="isbn" class="outline-0 bg-transparent text-base text-slate-500 w-full pl-1" placeholder="978-3-16-148410-0" required>
                         </div>
                     </div>
                     <div class="flex flex-col gap-1 mb-4">
                         <label for="publisher" class="text-base text-slate-500 font-medium cursor-pointer">Editora</label>
                         <div class="flex gap-2 border rounded-lg border-1 border-slate-300 p-1 input-container-effect relative">
-                            <input type="text" name="publisher" id="publisher" class="outline-0 bg-transparent text-base text-slate-500 w-full pl-1" placeholder="Intrínseca" required>
+                            <input type="text" name="publisher" value="<?= isset($item) ? $item["publisher"] : "" ?>" id="publisher" class="outline-0 bg-transparent text-base text-slate-500 w-full pl-1" placeholder="Intrínseca" required>
                         </div>
                     </div>
                     <div class="flex flex-col gap-1 mb-4">
                         <label for="edition" class="text-base text-slate-500 font-medium cursor-pointer">Edição</label>
                         <div class="flex gap-2 border rounded-lg border-1 border-slate-300 p-1 input-container-effect relative">
-                            <input type="number" name="edition" id="edition" min="0" class="outline-0 bg-transparent text-base text-slate-500 w-full pl-1" placeholder="4" required>
+                            <input type="number" name="edition" id="edition" value="<?= isset($item) ? $item["edition"] : "" ?>" min="0" class="outline-0 bg-transparent text-base text-slate-500 w-full pl-1" placeholder="4" required>
                         </div>
                     </div>
                     <div class="flex flex-col gap-1 mb-4">
                         <label for="year" class="text-base text-slate-500 font-medium cursor-pointer">Ano</label>
                         <div class="flex gap-2 border rounded-lg border-1 border-slate-300 p-1 input-container-effect relative">
-                            <input type="number" name="year" id="year" min="0" class="outline-0 bg-transparent text-base text-slate-500 w-full pl-1" placeholder="2000" required>
+                            <input type="number" name="year" id="year" min="0" value="<?= isset($item) ? $item["year"] : "" ?>" class="outline-0 bg-transparent text-base text-slate-500 w-full pl-1" placeholder="2000" required>
                         </div>
                     </div>
                     <div class="flex flex-col gap-1 mb-4">
                         <label for="place" class="text-base text-slate-500 font-medium cursor-pointer">Local</label>
                         <div class="flex gap-2 border rounded-lg border-1 border-slate-300 p-1 input-container-effect relative">
-                            <input type="text" name="place" id="place" class="outline-0 bg-transparent text-base text-slate-500 w-full pl-1" placeholder="São Paulo, Brasil" required>
+                            <input type="text" name="place" id="place" value="<?= isset($item) ? $item["place"] : "" ?>" class="outline-0 bg-transparent text-base text-slate-500 w-full pl-1" placeholder="São Paulo, Brasil" required>
                         </div>
                     </div>
 
                     <div class="flex flex-col gap-1 mb-4">
                         <label for="synthesis" class="text-base text-slate-500 font-medium cursor-pointer">Síntese</label>
                         <div class="flex gap-2 border rounded-lg border-1 border-slate-300 p-1 input-container-effect relative">
-                            <textarea name="synthesis" id="synthesis" class="w-full h-8 p-1 text-slate-600 outline-0 h-16" placeholder="O que você achou dessa obra?"></textarea>
+                            <textarea name="synthesis" id="synthesis" class="w-full h-8 p-1 text-slate-600 outline-0 h-16" placeholder="O que você achou dessa obra?"><?= isset($item) ? $item["synthesis"] : "" ?></textarea>
                         </div>
                     </div>
 
                     <div class="flex flex-col gap-1 mb-4">
                         <label for="tags" class="text-base text-slate-500 font-medium cursor-pointer">Tags <small>Separadas por vírgula</small></label>
                         <div class="flex gap-2 border rounded-lg border-1 border-slate-300 p-1 input-container-effect relative">
-                            <input type="text" name="tags" id="tags" class="outline-0 bg-transparent text-base text-slate-500 w-full pl-1" placeholder="Literatura Brasileira, Aventura" required>
+                            <input type="text" name="tags" value="<?= isset($item) ? $item["tags"] : "" ?>" id="tags" class="outline-0 bg-transparent text-base text-slate-500 w-full pl-1" placeholder="Literatura Brasileira, Aventura" required>
                         </div>
                     </div>
 
@@ -295,7 +364,7 @@ if (isset($_POST['submit'])) {
                     <div class="flex flex-col gap-1 mb-4">
                         <label for="section" class="text-base text-slate-500 font-medium cursor-pointer">Seção</label>
                         <div class="flex gap-2 border rounded-lg border-1 border-slate-300 p-1 input-container-effect relative">
-                            <input type="text" name="section" id="section" min="0" class="outline-0 bg-transparent text-base text-slate-500 w-full pl-1" placeholder="a4" required>
+                            <input type="text" name="section" value="<?= isset($item) ? $item["section"] : "" ?>" id="section" min="0" class="outline-0 bg-transparent text-base text-slate-500 w-full pl-1" placeholder="a4" required>
                         </div>
                     </div>
                     <div class="flex flex-col gap-1 mb-4 flex-1">
@@ -303,38 +372,38 @@ if (isset($_POST['submit'])) {
                         <div class="flex gap-1">
                             <input type="radio" name="isDigital" id="digital" value="true" checked>
                             <label for="digital" class="mr-4 text-slate-500">Obra digital</label>
-                            <input type="radio" name="isDigital" id="physical" value="false">
+                            <input type="radio" name="isDigital" id="physical" value="false" <?= isset($item) && !$item["isDigital"] ? "checked" : "" ?>>
                             <label for="physical" class="mr-4 text-slate-500">Obra Física</label>
                         </div>
                     </div>
                     <div class="flex flex-col gap-1 mb-4">
                         <label for="url" class="text-base text-slate-500 font-medium cursor-pointer">URL</label>
                         <div class="flex gap-2 border rounded-lg border-1 border-slate-300 p-1 input-container-effect relative">
-                            <input type="url" name="url" id="url" min="0" class="outline-0 bg-transparent text-base text-slate-500 w-full pl-1" placeholder="https://" required>
+                            <input type="url" name="url" value="<?= isset($item) ? $item["url"] : "" ?>" <?= isset($item) && $item["isDigital"] ? "" : "disabled" ?> id="url" min="0" class="outline-0 bg-transparent text-base text-slate-500 w-full pl-1" placeholder="https://" required>
                         </div>
                     </div>
                     <div class="flex flex-col gap-1 mb-4">
                         <label for="inventory" class="text-base text-slate-500 font-medium cursor-pointer">Estoque</label>
                         <div class="flex gap-2 border rounded-lg border-1 border-slate-300 p-1 input-container-effect relative">
-                            <input type="number" name="inventory" id="inventory" min="0" class="outline-0 bg-transparent text-base text-slate-500 w-full pl-1" placeholder="2" required disabled="true">
+                            <input type="number" name="inventory" value="<?= isset($item) ? $item["inventory"] : "" ?>" <?= isset($item) && $item["isDigital"] ? "disabled" : "" ?> id="inventory" min="0" class="outline-0 bg-transparent text-base text-slate-500 w-full pl-1" placeholder="2" required>
                         </div>
                     </div>
                     <div class="flex flex-col gap-1 mb-4">
                         <label for="number" class="text-base text-slate-500 font-medium cursor-pointer">Número do Livro</label>
                         <div class="flex gap-2 border rounded-lg border-1 border-slate-300 p-1 input-container-effect relative">
-                            <input type="text" name="number" id="number" min="0" class="outline-0 bg-transparent text-base text-slate-500 w-full pl-1" placeholder="091916" required>
+                            <input type="text" name="number" value="<?= isset($item) ? $item["number"] : "" ?>" id="number" min="0" class="outline-0 bg-transparent text-base text-slate-500 w-full pl-1" placeholder="091916" required>
                         </div>
                     </div>
                     <div class="flex flex-col gap-1 mb-4">
                         <label for="classification" class="text-base text-slate-500 font-medium cursor-pointer">Classificação</label>
                         <div class="flex gap-2 border rounded-lg border-1 border-slate-300 p-1 input-container-effect relative">
-                            <input type="text" name="classification" id="classification" min="0" class="outline-0 bg-transparent text-base text-slate-500 w-full pl-1" placeholder="004.421 S183a" required>
+                            <input type="text" name="classification" value="<?= isset($item) ? $item["classification"] : "" ?>" id="classification" min="0" class="outline-0 bg-transparent text-base text-slate-500 w-full pl-1" placeholder="004.421 S183a" required>
                         </div>
                     </div>
                     <div class="flex flex-col gap-1 mb-4">
                         <label for="physicalDescription" class="text-base text-slate-500 font-medium cursor-pointer">Descrição Física</label>
                         <div class="flex gap-2 border rounded-lg border-1 border-slate-300 p-1 input-container-effect relative">
-                            <input type="text" name="physicalDescription" id="physicalDescription" min="0" class="outline-0 bg-transparent text-base text-slate-500 w-full pl-1" placeholder="004.421 S183a" required>
+                            <input type="text" name="physicalDescription" value="<?= isset($item) ? $item["physicalDescription"] : "" ?>" id="physicalDescription" min="0" class="outline-0 bg-transparent text-base text-slate-500 w-full pl-1" placeholder="004.421 S183a" required>
                         </div>
                     </div>
                 </fieldset>

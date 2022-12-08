@@ -1,4 +1,7 @@
 const commentForm = document.querySelector(".send-comment")
+const label = document.querySelector('.name-label')
+const initialLabel = label.innerHTML
+const replyButtons = document.querySelectorAll(".reply-button")
 
 function ajaxComment(person, replyTo, content, item) {
     const xhr = new XMLHttpRequest()
@@ -28,5 +31,20 @@ commentForm.addEventListener('submit', event => {
     }
 
     ajaxComment(person, replyTo, content, item)
-    contentTextArea.value =""
+    contentTextArea.value = ""
 })
+
+replyButtons.forEach(button => button.addEventListener('click', () => {
+    const replyTo = document.querySelector('input[name="reply-to"]')
+    replyTo.value = button.dataset.commentId
+
+    const label = document.querySelector('.name-label')
+    label.innerHTML += ` 
+    <small>respondendo comentário #${replyTo.value}</small>
+    <button class=\"cancel text-xs py-1 px-2 bg-red-100 rounded text-red-700\" onclick="cancel()">Cancelar</button>`
+}))
+
+function cancel() {
+    label.innerHTML = initialLabel
+    document.querySelector('input[name="reply-to"]').value = ""
+}

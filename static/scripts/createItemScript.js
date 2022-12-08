@@ -2,6 +2,7 @@ const collectionSelect = document.querySelector('#collection')
 const newCollection = document.querySelector('#newCollection')
 const cdu = document.querySelector('#cdu')
 const newCollectionButton = document.querySelector('#newCollectionButton')
+const isbn = document.querySelector('#isbn')
 
 newCollectionButton.addEventListener('click', () => {
     collectionSelect.value = '+'
@@ -16,7 +17,12 @@ collectionSelect.addEventListener('change', () => {
         cdu.disabled = false
         newCollection.focus()
     } else {
+        const option = collectionSelect.options[collectionSelect.selectedIndex]
         newCollection.disabled = true
+        cdu.disabled = true
+        newCollection.value = option.text
+        cdu.value = option.dataset.cdu
+        isbn.focus()
     }
 })
 
@@ -40,3 +46,4 @@ function changeItemType() {
 
 isDigital.addEventListener('change', changeItemType)
 isPhysical.addEventListener('change', changeItemType)
+

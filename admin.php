@@ -3,6 +3,10 @@ include('./db/connection.php');
 include('./auth/protect.php');
 include('./components/head.php');
 
+if ($_SESSION['permission'] != 'Administrador') {
+    header('Location: ./');
+}
+
 $counts = [];
 
 $counts["items"] = "SELECT COUNT(itemID) AS amount FROM item";

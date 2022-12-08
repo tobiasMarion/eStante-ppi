@@ -4,6 +4,10 @@ include('../auth/protect.php');
 include('../components/head.php');
 include('../db/connection.php');
 
+if ($_SESSION['permission'] != 'Administrador') {
+    header('Location: ../');
+}
+
 $search = $mysqli->real_escape_string($_GET['search']);
 
 
@@ -20,8 +24,9 @@ $sql_query = $mysqli->query($sql_code) or die("Falha na execução do código SQ
 
         <main class="w-full max-w-7xl mx-auto flex-grow my-8 md:my-16 px-2 flex flex-col gap-2">
             <h1 class="font-semibold text-slate-900 text-2xl md:text-4xl mb-2">Usuário <?= $search ?></h1>
-            <p class="text-slate-500 text-sm md:text-base mb-4">Vamos ver o que encontramos na eStante sobre "Usuário
-                <?= $search ?>”.</p>
+            <p class="text-slate-500 text-sm md:text-base">Vamos ver o que encontramos na eStante sobre "Usuário <?= $search ?>”.</p>
+            <small class="text-slate-500 text-xs mb-6">Atenção: Promoções de usuários só afetaram o usuário na sua próxima sessão.</small>
+
 
 
             <table class="table-auto w-full">
@@ -50,11 +55,11 @@ $sql_query = $mysqli->query($sql_code) or die("Falha na execução do código SQ
                         switch ($permission_level) {
                             case 'admin':
                                 $option = "Leitor";
-                                $permission_level = "Admnistrador";
+                                $permission_level = "Administrador";
                                 break;
 
                             case 'employee':
-                                $option = "Admnistrador";
+                                $option = "Administrador";
                                 $permission_level = "Funcionário";
                                 break;
 
@@ -75,10 +80,13 @@ $sql_query = $mysqli->query($sql_code) or die("Falha na execução do código SQ
                                 <td class=\"text-left font-semibold text-slate-600 text-xs md:text-sm table-cell\">$name</td>
                                 <td class=\"text-left text-slate-500 text-xs md:text-sm\">$email</td>
                                 <td class=\"text-slate-500 text-xs md:text-sm\">$registration</td>
-                                <td class=\"text-slate-500 text-xs md:text-sm hidden md:table-cell\">$permission_level</td>
+                                <td class=\"text-slate-500 text-xs md:text-sm hidden md:table-cell permission-level-$id\">$permission_level</td>
                                 <td class=\"text-slate-500 text-xs md:text-sm hidden md:table-cell\">
-                                    <button class=\"border p-2 rounded-md drop-shadow-sm flex items-center justify-center gap-4 mx-auto\" data-permissionLevel=\"$permission_level\"->
-                                        <img src=\"../static/assets/icons/promote.svg\" alt=\"Copiar\">
+                                    <button 
+                                    class=\"border p-2 rounded-md drop-shadow-sm flex items-center justify-center gap-4 mx-auto promote\" data-permissionLevel=\"$permission_level\"
+                                    data-personID=\"$id\"
+                                    data-permissionLevel=\"$permission_level\">
+                                    <img src=\"../static/assets/icons/promote.svg\" alt=\"Promover\">
                                         Tornar $option
                                     </button>
                                 </td>
@@ -89,9 +97,6 @@ $sql_query = $mysqli->query($sql_code) or die("Falha na execução do código SQ
                     }
 
                     ?>
-
-
-
                 </tbody>
             </table>
         </main>
@@ -103,6 +108,7 @@ $sql_query = $mysqli->query($sql_code) or die("Falha na execução do código SQ
 
 
     <script src="<?= $component_prefix_path . "./static/scripts/inputEffect.js" ?>"></script>
+    <script src="<?= $component_prefix_path . "./static/scripts/promote.js" ?>"></script>
 
 </body>
 
