@@ -80,7 +80,7 @@ global $counts;
                     <strong class="text-2xl text-slate-900"><?= $counts["approved_comments"] ?></strong>
                     <p class="text-slate-600">Comentários Aprovados</p>
                 </div>
-                <a href="/" class="border rounded-lg drop-shadow-sm p-6 bg-white flex flex-col">
+                <a href="./pending-comments.php" class="border rounded-lg drop-shadow-sm p-6 bg-white flex flex-col">
                     <header class="flex justify-between items-start mb-4">
                         <img src="./static/assets/icons/pending-comments.svg" alt="Comentários Pendentes" class="w-6" />
                         <span class="opacity-0 flex gap-1 items-center leading-none text-xs text-emerald-600">Verificar
