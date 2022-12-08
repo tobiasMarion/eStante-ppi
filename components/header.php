@@ -42,7 +42,7 @@ if (!isset($component_prefix_path)) {
             <ul class="absolute flex w-max right-0 bg-white border-b-1 border-slate-100 drop-shadow-sm rounded-lg top-full text-sm py-1">
                 <?php
                 if (in_array($_SESSION['permission'], ['Administrador', 'Moderador'])) {
-                    echo ("<li ><a href=\"\" class=\"flex items-center gap-2 text-slate-500\"><img src=\"$component_prefix_path./static/assets/icons/slate-comment.svg\" alt=\"Comentários Pendentes\" class=\"w-4\"> Comentários Pendentes</a></li>");
+                    echo ("<li ><a href=\"$component_prefix_path./pending-comments.php\" class=\"flex items-center gap-2 text-slate-500\"><img src=\"$component_prefix_path./static/assets/icons/slate-comment.svg\" alt=\"Comentários Pendentes\" class=\"w-4\"> Comentários Pendentes</a></li>");
                 }
 
                 if ($_SESSION['permission'] == 'Administrador') {

@@ -33,7 +33,7 @@ $sql_code = "SELECT * FROM itemperson WHERE itemID=$id AND personID=$personID;";
 $sql_query_favorites = $mysqli->query($sql_code) or die("Falha na execução do código SQL: " . $mysqli);
 $item["isFavorite"] = $sql_query_favorites->num_rows == 1 ? true : false;
 
-
+global $id;
 global $item;
 ?>
 
@@ -135,7 +135,7 @@ global $item;
                                 <a class=\"py-2 px-4 bg-red-100 rounded text-red-700 flex-1 text-center\" href=\"./delete.php?item=$id\">Excluir Obra</a>
                             </div>";
 
-                    echo ($buttons);
+                        echo ($buttons);
                     }
                     ?>
                     <div>
@@ -158,7 +158,7 @@ global $item;
                         <header class="flex gap-2 mb-2">
                             <img src="<?= str_starts_with($_SESSION['avatar'], 'https://') ? $_SESSION['avatar'] : $component_prefix_path . $_SESSION['avatar'] ?>" alt="Avatar" class="w-12 h-auto rounded-full border border-2 border-emerald-500 object-cover">
                             <div class="hidden md:flex flex-col justify-center items-start w-fit">
-                                <span class="text-slate-600 text-sm md:text-base font-medium block"><?= $_SESSION["name"] ?></span>
+                                <span class="text-slate-600 text-sm md:text-base font-medium block name-label"><?= $_SESSION["name"] ?></span>
                                 <span class="block text-xs md:text-sm text-slate-500">Aluno</span>
                             </div>
                         </header>
@@ -172,16 +172,64 @@ global $item;
                 </form>
 
                 <div>
-                    <article class="p-4 bg-white border rounded-lg">
-                        <header class="flex gap-2 mb-2">
-                            <img src=" ../static/assets/profileFiller.png" alt="Fulano">
-                            <div class="hidden md:flex flex-col justify-center items-start w-fit">
-                                <span class="text-slate-700 text-sm md:text-base block leading-none">b</span>
-                                <span class="block text-xs font-light text-slate-500 leading-none">a</span>
-                            </div>
-                        </header>
-                        <p class="w-full h-8 p-1 h-min text-slate-600">Lorem ipsum dolor sit amet consectetur adipisicing elit. Unde exercitationem dicta perferendis? Omnis, facere enim doloremque quibusdam velit natus repellendus sit, aperiam consequuntur sunt tenetur libero impedit? Error, in non.</p>
-                    </article>
+                    <?php
+                    $sql_code = "SELECT * FROM comment INNER JOIN person ON comment.personID = person.personID WHERE approved=1 AND replyTo IS NULL AND itemID=$id";
+                    $sql_query = $mysqli->query($sql_code) or die("Falha na execução do código SQL: " . $mysqli);
+
+
+                    while ($comment = $sql_query->fetch_assoc()) {
+                        $avatar = str_starts_with($comment['avatar'], 'https://') ? $_SESSION['avatar'] : $component_prefix_path . $comment['avatar'];
+                        $commentID = $comment['commentID'];
+                        $name = $comment['name'];
+                        $type = $comment["type"] == "student" ? "Aluno" : "Servidor";
+                        $content = $comment['content'];
+
+                        $article = "<article class=\"p-4 bg-white border mb-4 rounded\">
+                            <header class=\"flex gap-2 mb-2\">
+                                <img src=\"$avatar\" alt=\"Fulano\" class=\"w-12 object-cover rounded-full\">
+                                <div class=\"hidden md:flex flex-col justify-center items-start w-fit\">
+                                    <span class=\"text-slate-700 text-sm md:text-base block leading-none\">$name</span>
+                                    <span class=\"block text-xs font-light text-slate-500 leading-none\">$type</span>
+                                </div>
+                            </header>
+                            <p class=\"w-full h-8 p-1 h-min text-slate-600\">$content</p>
+                            <a href=\"#comments\" data-comment-id=\"$commentID\" class=\"block w-min reply-button py-1 px-2 bg-emerald-100 rounded text-emerald-700 flex-1 text-center text-xs ml-auto mt-2\">Responder</a>
+                        </article>";
+
+                        echo ($article);
+
+                        $sql_code = "SELECT * FROM comment INNER JOIN person ON comment.personID = person.personID WHERE approved=1 AND replyTo=$commentID AND itemID=$id";
+                        $sql_query_sub_comment = $mysqli->query($sql_code) or die("Falha na execução do código SQL: " . $mysqli);
+
+                        if ($sql_query_sub_comment->num_rows > 0) {
+                            echo ("<div class=\"ml-4\">");
+                            while ($subcomment = $sql_query_sub_comment->fetch_assoc()) {
+                                $avatar = str_starts_with($subcomment['avatar'], 'https://') ? $_SESSION['avatar'] : $component_prefix_path . $subcomment['avatar'];
+                                $subcommentID = $subcomment['commentID'];
+                                $subname = $subcomment['name'];
+                                $type = $subcomment["type"] == "student" ? "Aluno" : "Servidor";
+                                $content = $subcomment['content'];
+
+                                $article = "<article class=\"p-4 bg-white border mb-4 rounded\">
+                                    <header class=\"flex gap-2 mb-2\">
+                                        <img src=\"$avatar\" alt=\"Fulano\" class=\"w-12 object-cover rounded-full\">
+                                        <div class=\"hidden md:flex flex-col justify-center items-start w-fit\">
+                                            <span class=\"text-slate-700 text-sm md:text-base block leading-none\">$subname <small>respondendo $name</small></span>
+                                            <span class=\"block text-xs font-light text-slate-500 leading-none\">$type</span>
+                                        </div>
+                                    </header>
+                                    <p class=\"w-full h-8 p-1 h-min text-slate-600\">$content</p>
+                                </article>";
+
+                                echo ($article);
+                            }
+                            echo ("</div>");
+                        }
+                    }
+
+                    ?>
+
+
                 </div>
             </section>
         </main>
