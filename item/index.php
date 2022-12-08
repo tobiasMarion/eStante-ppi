@@ -66,7 +66,7 @@ global $item;
                     $authors = [];
                     while ($author = $item["authors"]->fetch_assoc()) {
                         $name = $author["name"];
-                        $link = "<a href=\"\">$name</a>";
+                        $link = "<a href=\"../search.php?search=$name&search-for=author\">$name</a>";
                         array_push($authors, $link);
                     }
 
@@ -127,6 +127,16 @@ global $item;
                     }
 
                     echo ($buttons);
+
+                    if ($_SESSION['permission'] == 'Administrador') {
+                        $buttons = "
+                            <div class=\"flex gap-4 my-8 text-sm\">
+                                <a class=\"py-2 px-4 bg-emerald-100 rounded text-emerald-700 flex-1 text-center\" href=\"./create.php?item=$id\">Editar Obra</a>
+                                <a class=\"py-2 px-4 bg-red-100 rounded text-red-700 flex-1 text-center\" href=\"./delete.php?item=$id\">Excluir Obra</a>
+                            </div>";
+
+                    echo ($buttons);
+                    }
                     ?>
                     <div>
                         <h2 class="text-lg font-medium text-slate-600">Síntese</h2>
@@ -140,29 +150,26 @@ global $item;
                     <img src=" ../static/assets/icons/warning.svg" alt="Atenção" class="w-4">
                     Antes de serem exibidos, todos os comentários passam por uma revisão dos moderadores da <i>eStante</i>.
                 </p>
-                
+
 
 
                 <form class="flex flex-col my-8 items-end gap-2 send-comment" method="POST" action="./send_messages.php">
                     <article class="p-4 bg-white border rounded-lg w-full">
                         <header class="flex gap-2 mb-2">
-                            <img 
-                            src="<?= str_starts_with($_SESSION['avatar'], 'https://') ? $_SESSION['avatar'] : $component_prefix_path . $_SESSION['avatar'] ?>" 
-                            alt="Avatar"
-                            class="w-12 h-auto rounded-full border border-2 border-emerald-500 object-cover">
+                            <img src="<?= str_starts_with($_SESSION['avatar'], 'https://') ? $_SESSION['avatar'] : $component_prefix_path . $_SESSION['avatar'] ?>" alt="Avatar" class="w-12 h-auto rounded-full border border-2 border-emerald-500 object-cover">
                             <div class="hidden md:flex flex-col justify-center items-start w-fit">
-                                <span class="text-slate-600 text-sm md:text-base font-medium block"><?=$_SESSION["name"]?></span>
+                                <span class="text-slate-600 text-sm md:text-base font-medium block"><?= $_SESSION["name"] ?></span>
                                 <span class="block text-xs md:text-sm text-slate-500">Aluno</span>
                             </div>
                         </header>
                         <textarea name="comment" class="w-full h-8 p-1 text-slate-600" placeholder="O que você achou dessa obra?"></textarea>
                     </article>
 
-                    <input type="hidden" name="item-id" value="<?=$item["itemID"]?>">
+                    <input type="hidden" name="item-id" value="<?= $item["itemID"] ?>">
                     <input type="hidden" name="reply-to" value="">
-                    <input type="hidden" name="person" value="<?=$_SESSION["id"]?>">
+                    <input type="hidden" name="person" value="<?= $_SESSION["id"] ?>">
                     <button class="w-min px-4 py-2 bg-emerald-500 rounded-lg font-medium text-slate-50">Comentar</button>
-                </form> 
+                </form>
 
                 <div>
                     <article class="p-4 bg-white border rounded-lg">

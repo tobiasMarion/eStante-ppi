@@ -71,8 +71,8 @@ CREATE TABLE IF NOT EXISTS ItemAuthor (
     itemID INT NOT NULL,
 
     PRIMARY KEY (authorID, itemID),
-    FOREIGN KEY (authorID) REFERENCES Author(authorID),
-    FOREIGN KEY (itemID) REFERENCES Item(itemID)
+    FOREIGN KEY (authorID) REFERENCES Author(authorID) ON DELETE CASCADE,
+    FOREIGN KEY (itemID) REFERENCES Item(itemID) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS ItemTranslator (
@@ -80,8 +80,8 @@ CREATE TABLE IF NOT EXISTS ItemTranslator (
     itemID INT NOT NULL,
 
     PRIMARY KEY (translatorID, itemID),
-    FOREIGN KEY (translatorID) REFERENCES Translator(translatorID),
-    FOREIGN KEY (itemID) REFERENCES Item(itemID)
+    FOREIGN KEY (translatorID) REFERENCES Translator(translatorID) ON DELETE CASCADE,
+    FOREIGN KEY (itemID) REFERENCES Item(itemID) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS Tag (
@@ -96,8 +96,8 @@ CREATE TABLE IF NOT EXISTS ItemTag (
     itemID INT NOT NULL,
 
     PRIMARY KEY (tagID, itemID),
-    FOREIGN KEY (tagID) REFERENCES Tag(tagID),
-    FOREIGN KEY (itemID) REFERENCES Item(itemID)
+    FOREIGN KEY (tagID) REFERENCES Tag(tagID) ON DELETE CASCADE,
+    FOREIGN KEY (itemID) REFERENCES Item(itemID) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS Comment (
@@ -109,9 +109,9 @@ CREATE TABLE IF NOT EXISTS Comment (
     approved BOOLEAN,
 
     PRIMARY KEY(commentID),
-    FOREIGN KEY (personID) REFERENCES Person(personID),
-    FOREIGN KEY (itemID) REFERENCES Item(itemID),
-    FOREIGN KEY (replyTo) REFERENCES Comment(commentID)
+    FOREIGN KEY (personID) REFERENCES Person(personID) ON DELETE CASCADE,
+    FOREIGN KEY (itemID) REFERENCES Item(itemID) ON DELETE CASCADE,
+    FOREIGN KEY (replyTo) REFERENCES Comment(commentID) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS Evaluation (
@@ -120,8 +120,8 @@ CREATE TABLE IF NOT EXISTS Evaluation (
     value INT,
     
     PRIMARY KEY(personID, itemID),
-    FOREIGN KEY (personID) REFERENCES Person(personID),
-    FOREIGN KEY (itemID) REFERENCES Item(itemID)
+    FOREIGN KEY (personID) REFERENCES Person(personID) ON DELETE CASCADE,
+    FOREIGN KEY (itemID) REFERENCES Item(itemID) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS ItemPerson (
@@ -129,6 +129,6 @@ CREATE TABLE IF NOT EXISTS ItemPerson (
     itemID INT NOT NULL,
 
     PRIMARY KEY (personID, itemID),
-    FOREIGN KEY (personID) REFERENCES Person(personID),
-    FOREIGN KEY (itemID) REFERENCES Item(itemID)
+    FOREIGN KEY (personID) REFERENCES Person(personID) ON DELETE CASCADE,
+    FOREIGN KEY (itemID) REFERENCES Item(itemID) ON DELETE CASCADE
 );
