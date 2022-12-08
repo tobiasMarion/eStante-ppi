@@ -50,10 +50,11 @@ if (!isset($component_prefix_path)) {
                 }
 
                 if ($_SESSION['permission'] == 'Administrador') {
-                    echo ("<li ><a href=\"$component_prefix_path./item/create.php\" class=\"flex items-center gap-2 text-slate-500\"><img src=\"$component_prefix_path./static/assets/icons/add-slate.svg\" alt=\"Painel de Controle\" class=\"w-4\"> Adicionar Obra</a></li>");
+                    echo ("<li ><a href=\"$component_prefix_path./item/create.php\" class=\"flex items-center gap-2 text-slate-500\"><img src=\"$component_prefix_path./static/assets/icons/add-slate.svg\" alt=\"Adicionar Obra\" class=\"w-4\"> Adicionar Obra</a></li>");
                 }
 
                 ?>
+                <li><a href="<?= $component_prefix_path ?>./user/create.php?person=<?=$_SESSION['id']?>" class="flex items-center gap-2 text-slate-500"><img src="<?= $component_prefix_path ?>./static/assets/icons/edit-profile.svg" alt="Editar Perfil" class="w-4"> Editar perfil</a></li>
                 <li><a href="<?= $component_prefix_path ?>./auth/logout.php" class="flex items-center gap-2 text-slate-500"><img src="<?= $component_prefix_path ?>./static/assets/icons/log-out.svg" alt="Sair" class="w-4"> Sair</a></li>
 
 

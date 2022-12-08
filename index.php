@@ -53,8 +53,8 @@ include('./components/head.php');
                             $itemArticle = "
                                     <article class=\"swiper-slide rounded-lg overflow-hidden border drop-shadow\">
                                         <img src=\"$cover\" alt=\"Capa: Livro tal\" class=\"object-cover w-full h-48\">
-                                        <h3 class=\"text-base text-slate-700 mx-2 mt-4 font-medium\">$title</h3>
-                                        <p class=\"text-sm text-slate-600 mx-2 mb-4\">$authors</p>
+                                        <h3 class=\"text-base text-slate-700 mx-2 mt-4 font-medium truncate\">$title</h3>
+                                        <p class=\"text-sm text-slate-600 mx-2 mb-4 truncate\">$authors</p>
                                         <a href=\"./item/?item=$id\" class=\"flex items-center justify-center gap-2 hover:gap-3 hover:bg-emerald-100 font-medium py-2 bg-emerald-50 text-emerald-600 border-t\">
                                             Visitar obra 
                                             <img src=\"./static/assets/icons/arrow-right.svg\" alt=\"Visitar\">
@@ -104,8 +104,8 @@ include('./components/head.php');
                     $itemArticle = "
                             <article class=\"swiper-slide rounded-lg overflow-hidden border drop-shadow\">
                                 <img src=\"$cover\" alt=\"Capa: Livro tal\" class=\"object-cover w-full h-48\">
-                                <h3 class=\"text-base text-slate-700 mx-2 mt-4 font-medium\">$title</h3>
-                                <p class=\"text-sm text-slate-600 mx-2 mb-4\">$authors</p>
+                                <h3 class=\"text-base text-slate-700 mx-2 mt-4 font-medium truncate\">$title</h3>
+                                <p class=\"text-sm text-slate-600 mx-2 mb-4 truncate\">$authors</p>
                                 <a href=\"./item/?item=$id\" class=\"flex items-center justify-center gap-2 hover:gap-3 hover:bg-emerald-100 font-medium py-2 bg-emerald-50 text-emerald-600 border-t\">
                                     Visitar obra 
                                     <img src=\"./static/assets/icons/arrow-right.svg\" alt=\"Visitar\">

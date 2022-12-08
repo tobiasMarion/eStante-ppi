@@ -22,29 +22,50 @@ if (isset($_POST['submit'])) {
 
     global $rows;
 
+    if (($_FILES['avatar']['name'] != '')) {
+        $file = $_FILES['avatar']['name'];
+        $path = pathinfo($file);
+        $ext = $path['extension'];
+        $temp_name = $_FILES['avatar']['tmp_name'];
+        $permanent_name = uniqid() . "." . $ext;
+        $store_at = getcwd() . '/../db/uploads/avatars/' . $permanent_name;
+        move_uploaded_file($temp_name, $store_at);
+        $avatar = './db/' . $permanent_name;
+    } else {
+        $seed = explode(' ', $name)[0];
+        $avatar = "https://avatars.dicebear.com/api/adventurer-neutral/$seed.svg";
+    }
+    
     if ($rows == 0) {
-        if (($_FILES['avatar']['name'] != '')) {
-            $file = $_FILES['avatar']['name'];
-            $path = pathinfo($file);
-            $ext = $path['extension'];
-            $temp_name = $_FILES['avatar']['tmp_name'];
-            $permanent_name = uniqid() . "." . $ext;
-            $store_at = getcwd() . '/../db/uploads/avatars/' . $permanent_name;
-            move_uploaded_file($temp_name, $store_at);
-            $avatar = './db/' . $permanent_name;
-        } else {
-            $seed = explode(' ', $name)[0];
-            $avatar = "https://avatars.dicebear.com/api/adventurer-neutral/$seed.svg";
-        }
-
-
         $password = password_hash($password, PASSWORD_DEFAULT);
 
         $sql_code = "INSERT INTO `person` (`name`, `registration`, `cpf`, `email`, `password`, `type`, `course`, `campus`, `regular`, `avatar`) VALUES ('$name', '$registration', '$cpf', '$email', '$password', '$type', '$course', '$campus', '$regular', '$avatar')";
 
         $sql_query = $mysqli->query($sql_code) or die("Falha na execução do código SQL: " . $mysqli);
         header("Location: ../auth/logout.php");
+    } else if (isset($_GET['person'])) {
+        $personID = $mysqli->real_escape_string($_GET['person']);
+        $sql_code = "UPDATE `person`SET `name`='$name', `registration`='$registration', `cpf`='$cpf', `email`='$email', `type`='$type',`course`='$course',`campus`='$campus',`regular`='$regular',`avatar`='$avatar' WHERE `personID`=$personID;";
+        $sql_query = $mysqli->query($sql_code) or die("Falha na execução do código SQL: " . $mysqli);
+        header("Location: ../");
     }
+}
+
+if (isset($_GET['person']) && !isset($_POST['submit'])) {
+    include('../auth/protect.php');
+
+    $personID = $mysqli->real_escape_string($_GET['person']);
+
+    if ($personID == $_SESSION["id"]) {
+        $sql_code = "SELECT * FROM person WHERE personID=$personID";
+        $sql_query = $mysqli->query($sql_code) or die("Falha na execução do código SQL: " . $mysqli);
+        $person = $sql_query->fetch_assoc();
+    
+        global $person;
+    } else {
+        header("Location: ../");
+    }
+
 }
 ?>
 
@@ -68,7 +89,7 @@ if (isset($_POST['submit'])) {
                     <div class="flex flex-col gap-1 mb-4">
                         <label for="name" class="text-base text-slate-500 font-medium cursor-pointer">Nome</label>
                         <div class="flex gap-2 border rounded-lg border-1 border-slate-300 p-1 input-container-effect relative">
-                            <input type="text" name="name" id="name" class="outline-0 bg-transparent text-base text-slate-500 w-full pl-1" placeholder="João da Silva" required>
+                            <input type="text" value="<?= isset($person) ? $person["name"] : "" ?>" name="name" id="name" class="outline-0 bg-transparent text-base text-slate-500 w-full pl-1" placeholder="João da Silva" required>
                         </div>
                     </div>
 
@@ -81,35 +102,41 @@ if (isset($_POST['submit'])) {
                     <div class="flex flex-col gap-1 mb-4">
                         <label for="cpf" class="text-base text-slate-500 font-medium cursor-pointer">CPF</label>
                         <div class="flex gap-2 border rounded-lg border-1 border-slate-300 p-1 input-container-effect relative">
-                            <input type="text" name="cpf" id="cpf" class="outline-0 bg-transparent text-base text-slate-500 w-full pl-1" placeholder="000.000.000-00" required pattern="([0-9]{2}[\.]?[0-9]{3}[\.]?[0-9]{3}[\/]?[0-9]{4}[-]?[0-9]{2})|([0-9]{3}[\.]?[0-9]{3}[\.]?[0-9]{3}[-]?[0-9]{2})">
+                            <input type="text" value="<?= isset($person) ? $person["cpf"] : "" ?>" name="cpf" id="cpf" class="outline-0 bg-transparent text-base text-slate-500 w-full pl-1" placeholder="000.000.000-00" required pattern="([0-9]{2}[\.]?[0-9]{3}[\.]?[0-9]{3}[\/]?[0-9]{4}[-]?[0-9]{2})|([0-9]{3}[\.]?[0-9]{3}[\.]?[0-9]{3}[-]?[0-9]{2})">
                         </div>
                     </div>
-                    <div class="flex flex-col gap-1 mb-4">
-                        <label for="cpf" class="text-base text-slate-500 font-medium cursor-pointer">Senha</label>
-                        <div class="flex gap-2 border rounded-lg border-1 border-slate-300 p-1 input-container-effect relative">
-                            <input type="password" name="password" id="password" class="outline-0 bg-transparent text-base text-slate-500 w-full pl-1" placeholder="********" required pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$">
-                        </div>
-                        <ul class="text-slate-400 text-xs ml-4">
-                            <li>Mínimo de 8 caracteres</li>
-                            <li>Mínimo de 1 letra maiúscula</li>
-                            <li>Mínimo de 1 número</li>
-                            <li>Mínimo de 1 símbolo (!#$)</li>
-                        </ul>
-                    </div>
+
+                    <?php 
+                        if (!isset($person)) {
+                            echo("<div class=\"flex flex-col gap-1 mb-4\">
+                            <label for=\"cpf\" class=\"text-base text-slate-500 font-medium cursor-pointer\">Senha</label>
+                            <div class=\"flex gap-2 border rounded-lg border-1 border-slate-300 p-1 input-container-effect relative\">
+                                <input type=\"password\" name=\"password\" id=\"password\" class=\"outline-0 bg-transparent text-base text-slate-500 w-full pl-1\" placeholder=\"********\" required pattern=\"^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$\">
+                            </div>
+                            <ul class=\"text-slate-400 text-xs ml-4\">
+                                <li>Mínimo de 8 caracteres</li>
+                                <li>Mínimo de 1 letra maiúscula</li>
+                                <li>Mínimo de 1 número</li>
+                                <li>Mínimo de 1 símbolo (!#$)</li>
+                            </ul>
+                        </div>");
+                        }
+                    ?>
+                    
                 </fieldset>
                 <fieldset class="mb-8">
                     <legend class="text-2xl text-slate-600 font-semibold mb-4">Dados Acadêmicos/Profissionais</legend>
                     <div class="flex flex-col gap-1 mb-4">
                         <label for="registration" class="text-base text-slate-500 font-medium cursor-pointer">Matrícula/SIAPE</label>
                         <div class="flex gap-2 border rounded-lg border-1 border-slate-300 p-1 input-container-effect relative">
-                            <input type="text" name="registration" id="registration" class="outline-0 bg-transparent text-base text-slate-500 w-full pl-1" placeholder="2020300000" required>
+                            <input type="text" value="<?= isset($person) ? $person["registration"] : "" ?>" name="registration" id="registration" class="outline-0 bg-transparent text-base text-slate-500 w-full pl-1" placeholder="2020300000" required>
                         </div>
                     </div>
                     <div class="flex flex-col gap-1 mb-4">
                         <label for="email" class="text-base text-slate-500 font-medium cursor-pointer">Email
                             Institucional <small>(@iffar)</small></label>
                         <div class="flex gap-2 border rounded-lg border-1 border-slate-300 p-1 input-container-effect relative">
-                            <input type="email" name="email" id="email" class="outline-0 bg-transparent text-base text-slate-500 w-full pl-1" placeholder="joao@aluno.iffar.edu.br" required pattern=".*@(?:iffar|aluno\.iffar|iffarroupilha)\.edu\.br">
+                            <input type="email" value="<?= isset($person) ? $person["email"] : "" ?>" name="email" id="email" class="outline-0 bg-transparent text-base text-slate-500 w-full pl-1" placeholder="joao@aluno.iffar.edu.br" required pattern=".*@(?:iffar|aluno\.iffar|iffarroupilha)\.edu\.br">
                         </div>
                     </div>
                     <div class="flex flex-col gap-1 mb-4">
@@ -136,7 +163,7 @@ if (isset($_POST['submit'])) {
                         <label for="course" class="text-base text-slate-500 font-medium cursor-pointer">Curso</label>
                         <div class="flex gap-2 border rounded-lg border-1 border-slate-300 p-1 input-container-effect relative">
 
-                            <select class="w-full text-slate-500" name="course" id="course" required>
+                            <select class="w-full text-slate-500" name="course" id="course" required >
                                 <optgroup class="font-semibold" label="Cursos Integrados">
                                     <option value="Técnico em Agropecuária Integrado">Técnico em Agropecuária Integrado
                                     </option>
@@ -165,7 +192,7 @@ if (isset($_POST['submit'])) {
                             <div class="flex gap-1">
                                 <input type="radio" name="type" id="student" value="student" checked>
                                 <label for="student" class="mr-4 text-slate-500">Aluno</label>
-                                <input type="radio" name="type" id="employee" value="employee">
+                                <input type="radio" name="type" id="employee" value="employee" <?= isset($person) && $person["type"] == "employee" ? "checked" : "" ?>>
                                 <label for="employee" class="mr-4 text-slate-500">Servidor</label>
                             </div>
                         </div>
@@ -174,7 +201,7 @@ if (isset($_POST['submit'])) {
                             <div class="flex gap-1">
                                 <input type="radio" name="regular" id="regular" value="1" checked>
                                 <label for="regular" class="mr-4 text-slate-500">Regular</label>
-                                <input type="radio" name="regular" id="away" value="0">
+                                <input type="radio" name="regular" id="away" value="0" <?= isset($person) && !$person["regular"] ? "checked" : "" ?>>
                                 <label for="away" class="mr-4 text-slate-500">Afastado</label>
                             </div>
                         </div>
